@@ -39,7 +39,7 @@ export default function SuperDashboard() {
   }, [superuser]);
 
   // Función para agregar un producto
-  const handleAddProduct = async () => {
+  const handleAddProduct = () => {
     navigate("/product-form");
   };
 
@@ -62,7 +62,7 @@ export default function SuperDashboard() {
     navigate("/login-super");
   };
 
-  // Render de productos
+  // Render de productos con el botón Editar
   const renderProduct = (product) => (
     <div key={product.id} className="product-item">
       <h3>{product.nombre}</h3>
@@ -70,8 +70,14 @@ export default function SuperDashboard() {
       <p>Stock: {product.stock}</p>
       <p>Código de Barra: {product.codigo_barra}</p>
       <button
+        className="edit-button"
+        onClick={() => navigate(`/edit-product/${product.id}`)} // Redirige al formulario de edición
+      >
+        Editar
+      </button>
+      <button
         className="delete-button"
-        onClick={() => handleDeleteProduct(product.id)}
+        onClick={() => handleDeleteProduct(product.id)} // Manejar eliminación
       >
         Eliminar
       </button>
