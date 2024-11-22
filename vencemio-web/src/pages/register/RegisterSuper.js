@@ -13,8 +13,6 @@ function RegisterSuper() {
   const [ubicacion, setUbicacion] = useState({ latitud: "", longitud: "" });
   const [codSuper, setCodSuper] = useState(""); // Estado para cod_super
 
-  const API_KEY = "AIzaSyDfR8R3kODwr6vAbklJFr7wNvYtddQ4Wec"; // Reemplaza con tu clave válida
-
   // Generar cod_super dinámicamente
   const generateCodSuper = (cadena, direccion) => {
     if (cadena && direccion) {
@@ -39,26 +37,25 @@ function RegisterSuper() {
   const getCoordinates = async () => {
     const address = `${direccion}, ${ciudad}, ${provincia}`;
     console.log(`Solicitando coordenadas para: ${address}`);
-
+  
     try {
-      const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          address
-        )}&key=${API_KEY}`
-      );
-
-      if (response.data.status === "OK") {
-        const location = response.data.results[0].geometry.location;
-        setUbicacion({ latitud: location.lat, longitud: location.lng });
-        alert(`Ubicación obtenida: Latitud: ${location.lat}, Longitud: ${location.lng}`);
-      } else {
-        alert(`No se encontraron coordenadas: ${response.data.status}`);
-      }
+      // Solicitud al backend
+      const response = await axios.get("http://localhost:5000/api/google/geocode", {
+        params: { address },
+      });
+  
+      setUbicacion({
+        latitud: response.data.lat,
+        longitud: response.data.lng,
+      });
+  
+      alert(`Ubicación obtenida: Latitud: ${response.data.lat}, Longitud: ${response.data.lng}`);
     } catch (error) {
       console.error("Error obteniendo coordenadas:", error);
       alert("Hubo un problema al obtener la ubicación.");
     }
   };
+  
 
   const handleRegister = async () => {
     try {
