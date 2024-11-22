@@ -5,7 +5,10 @@ import LoginSuper from "./pages/login/LoginSuper";
 import HomePage from "./pages/HomePage";
 import RegisterUser from "./pages/register/RegisterUser";
 import RegisterSuper from "./pages/register/RegisterSuper";
+import SuperDashboard from "./pages/supermarketPages/SuperDashboard";
+import ProductForm from "./pages/supermarketPages/ProductForm";
 import Header from "./layouts/Header";
+
 
 function App() {
   return (
@@ -17,6 +20,8 @@ function App() {
         <Route path="/register" element={<RegisterUser />} />
         <Route path="/register-super" element={<RegisterSuper />} />
         <Route path="/login-super" element={<LoginSuper />} />
+        <Route path="/super-dashboard" element={<SuperDashboard />} />
+        <Route path="/product-form" element={<ProductForm />} />
       </Routes>
     </Router>
   );
