@@ -8,6 +8,8 @@ import RegisterSuper from "./pages/register/RegisterSuper";
 import SuperDashboard from "./pages/supermarketPages/SuperDashboard";
 import ProductForm from "./pages/supermarketPages/ProductForm";
 import ProductEditForm from "./pages/supermarketPages/ProductEditForm";
+import UserHome from "./pages/userPages/UserHome"; // Importa el UserHome
+import MapScreen from "./pages/userPages/MapScreen";
 import Header from "./layouts/Header";
 
 
@@ -24,6 +26,9 @@ function App() {
         <Route path="/super-dashboard" element={<SuperDashboard />} />
         <Route path="/product-form" element={<ProductForm />} />
         <Route path="/edit-product/:id" element={<ProductEditForm />} />
+        <Route path="/map-screen" element={<MapScreen />} />
+        <Route path="/user-home" element={<UserHome />} /> {/* Ruta al UserHome */}
+
       </Routes>
     </Router>
   );

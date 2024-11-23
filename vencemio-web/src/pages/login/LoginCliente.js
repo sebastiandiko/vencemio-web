@@ -27,9 +27,9 @@ function LoginCliente() {
         // Guardar el token en el almacenamiento local
         localStorage.setItem("token", data.token);
 
-        // Navegar al home del cliente
+        // Redirigir al UserHome
         alert("Inicio de sesión exitoso");
-        navigate("/home");
+        navigate("/user-home");
       } else {
         // Mostrar error en caso de credenciales incorrectas
         alert(data.message || "Correo o contraseña incorrectos");
