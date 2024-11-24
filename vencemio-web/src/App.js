@@ -1,24 +1,27 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"; // Agrega Navigate
+import Header from "./layouts/Header"; // Importa el Header
 import LoginCliente from "./pages/login/LoginCliente";
 import LoginSuper from "./pages/login/LoginSuper";
-import HomePage from "./pages/HomePage";
 import RegisterUser from "./pages/register/RegisterUser";
 import RegisterSuper from "./pages/register/RegisterSuper";
 import SuperDashboard from "./pages/supermarketPages/SuperDashboard";
 import ProductForm from "./pages/supermarketPages/ProductForm";
 import ProductEditForm from "./pages/supermarketPages/ProductEditForm";
-import UserHome from "./pages/userPages/UserHome"; // Importa el UserHome
 import MapScreen from "./pages/userPages/MapScreen";
-import Header from "./layouts/Header";
-
+import UserHome from "./pages/userPages/UserHome";
+import PrincipalPageComercio from "./pages/PrincipalPageComercio";
+import PrincipalPageComprador from "./pages/PrincipalPageComprador";
 
 function App() {
   return (
     <Router>
       <Header />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        {/* Redirección de la raíz al principal-comprador */}
+        <Route path="/" element={<Navigate to="/principal-comprador" />} />
+        
+        {/* Otras rutas */}
         <Route path="/login" element={<LoginCliente />} />
         <Route path="/register" element={<RegisterUser />} />
         <Route path="/register-super" element={<RegisterSuper />} />
@@ -27,8 +30,9 @@ function App() {
         <Route path="/product-form" element={<ProductForm />} />
         <Route path="/edit-product/:id" element={<ProductEditForm />} />
         <Route path="/map-screen" element={<MapScreen />} />
-        <Route path="/user-home" element={<UserHome />} /> {/* Ruta al UserHome */}
-
+        <Route path="/user-home" element={<UserHome />} />
+        <Route path="/principal-comercio" element={<PrincipalPageComercio />} />
+        <Route path="/principal-comprador" element={<PrincipalPageComprador />} />
       </Routes>
     </Router>
   );

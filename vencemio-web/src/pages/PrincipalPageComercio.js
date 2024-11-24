@@ -1,6 +1,6 @@
 import React from "react";
 
-function HomePage() {
+function PrincipalPageComercio() {
   return (
     <div>
       <h1>Bienvenido a la página principal</h1>
@@ -12,4 +12,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default PrincipalPageComercio;

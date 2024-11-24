@@ -1,0 +1,38 @@
+
+
+.home-page {
+  scroll-behavior: smooth; /* Habilitar desplazamiento suave */
+}
+
+.section {
+  padding: 50px;
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+  border-bottom: 1px solid #ddd;
+  background-image: url('../../public/logoFondo.png'); /* Ruta de la imagen */
+  background-size: 50%; /* Ajusta el tamaño de la imagen */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  background-position: center; /* Centra la imagen */
+  filter: opacity(0.3); /* Reduce la opacidad de la imagen */
+  font-family: 'Arial', sans-serif; /* Opcional: define una fuente base */
+}
+
+
+.section:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.section:nth-child(even) {
+  background-color: #fff;
+}
+
+.section h2 {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.section p {
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+}
