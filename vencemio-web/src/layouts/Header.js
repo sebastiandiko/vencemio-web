@@ -50,11 +50,10 @@ function Header() {
       </div>
       <nav className="header__nav">
         <a href="#como-funciona">¿Cómo funciona?</a>
-        <a href="#proceso">Proceso</a>
         <a href="#beneficios">Beneficios</a>
         <a href="#partners">Partners</a>
-        <a href="#preguntas-frecuentes">Preguntas Frecuentes</a>
-        <a href="#nosotros">Nosotros</a>
+        <a href="#faq">Preguntas Frecuentes</a>
+        <a href="#sobre-nosotros">Nosotros</a>
       </nav>
       <div className="header__toggle">
         <button

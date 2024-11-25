@@ -1,0 +1,29 @@
+.partners-carousel {
+    padding: 50px 20px;
+    text-align: center;
+    background: linear-gradient(to bottom, #4a148c, #76c043); /* Fondo degradado */
+    color: white;
+  }
+  
+  .carousel-title {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+  
+  .partner-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .partner-logo {
+    max-width: 150px;
+    max-height: 100px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+  
+  .partner-logo:hover {
+    transform: scale(1.1); /* Efecto de zoom al pasar el mouse */
+  }
+  

@@ -1,38 +1,59 @@
-
-
-.home-page {
-  scroll-behavior: smooth; /* Habilitar desplazamiento suave */
-}
-
 .section {
   padding: 50px;
-  height: 100vh; /* Ocupa toda la altura de la pantalla */
-  border-bottom: 1px solid #ddd;
-  background-image: url('../../public/logoFondo.png'); /* Ruta de la imagen */
-  background-size: 50%; /* Ajusta el tamaño de la imagen */
-  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  min-height: 100vh; /* Ocupa al menos la altura de la pantalla */
+  position: relative; /* Posiciona elementos internos */
+  font-family: 'Arial', sans-serif; /* Define la fuente base */
+
+  /* Fondo con superposición */
+  background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('../../public/logoFondo.png');
+  background-size: contain; /* Ajusta la imagen */
+  background-repeat: no-repeat; /* Evita repeticiones */
   background-position: center; /* Centra la imagen */
-  filter: opacity(0.3); /* Reduce la opacidad de la imagen */
-  font-family: 'Arial', sans-serif; /* Opcional: define una fuente base */
+  border-bottom: 1px solid #ddd; /* Línea entre secciones */
 }
 
-
-.section:nth-child(odd) {
-  background-color: #ffffff;
-}
-
-.section:nth-child(even) {
-  background-color: #fff;
-}
-
-.section h2 {
-  font-size: 24px;
+.section-title {
+  font-size: 32px;
   text-align: center;
+  color: #4a148c;
   margin-bottom: 20px;
 }
 
-.section p {
+.section-subtitle {
+  font-size: 18px;
   text-align: center;
-  font-size: 16px;
   color: #555;
+  margin-bottom: 40px;
+}
+
+.steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.step h3 {
+  font-size: 20px;
+  color: #4a148c;
+  margin-bottom: 10px;
+}
+
+.step p {
+  font-size: 16px;
+  color: #333; /* Texto más oscuro para mejorar contraste */
+}
+
+.step-visual {
+  font-size: 40px;
+  margin-top: 20px;
+  color: #76c043; /* Color destacado para los íconos */
 }
