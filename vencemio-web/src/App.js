@@ -12,6 +12,8 @@ import MapScreen from "./pages/userPages/MapScreen";
 import UserHome from "./pages/userPages/UserHome";
 import PrincipalPageComercio from "./pages/PrincipalPageComercio";
 import PrincipalPageComprador from "./pages/PrincipalPageComprador";
+import FavoritesPage from "./pages/userPages/FavoritesPage"; // Importa el componente de favoritos
+
 
 function App() {
   return (
@@ -33,6 +35,7 @@ function App() {
         <Route path="/user-home" element={<UserHome />} />
         <Route path="/principal-comercio" element={<PrincipalPageComercio />} />
         <Route path="/principal-comprador" element={<PrincipalPageComprador />} />
+        <Route path="/favorites" element={<FavoritesPage />} />      
       </Routes>
     </Router>
   );

@@ -44,6 +44,7 @@
   padding-left: 20px;
   font-size: 18px;
   color: #000000; /* Verde claro */
+  font-weight: bold;
 }
 
 .faq-item:hover {

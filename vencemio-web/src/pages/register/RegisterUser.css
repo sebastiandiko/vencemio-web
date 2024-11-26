@@ -12,7 +12,8 @@
     url('../../../public/logoFondo.png'); /* Imagen de fondo */
   background-repeat: no-repeat;
   background-size: 40%; /* Ajusta la imagen */
-  background-position: center;}
+  background-position: center;
+}
 
 .register-title {
   font-size: 28px;
