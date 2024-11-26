@@ -1,36 +1,38 @@
-import React, { useState, useContext } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext"; // Importa el contexto
-import "./LoginSuper.css"; // Archivo CSS para estilos
+import { useAuth } from "../../context/AuthContext"; // Usar AuthContext
+import "./LoginSuper.css";
 
 function LoginSuper() {
+  const { loginSuper } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false); // Estado de carga
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setSuperuser } = useContext(AuthContext); // Accede al contexto
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login-super", {
-        email,
-        password,
+      const response = await fetch("http://localhost:5000/api/auth/login-super", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (response.status === 200) {
-        const { token, super: superData } = response.data;
-        localStorage.setItem("super_token", token);
-        setSuperuser(superData); // Guarda los datos en el contexto
+      const data = await response.json();
+
+      if (response.ok) {
+        loginSuper(data.super, data.token); // Inicializa el contexto del supermercado
         alert("Inicio de sesión exitoso");
         navigate("/super-dashboard");
+      } else {
+        alert(data.message || "Credenciales inválidas");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      alert("Credenciales inválidas");
+      alert("Hubo un problema con el inicio de sesión.");
     } finally {
       setLoading(false);
     }
@@ -40,10 +42,7 @@ function LoginSuper() {
     <div className="login-super">
       <div className="login-super-container">
         <h1 className="login-title">Iniciar Sesión - Supermercado</h1>
-        <form
-          className="login-form"
-          onSubmit={handleLogin}
-        >
+        <form className="login-form" onSubmit={handleLogin}>
           <label htmlFor="email">Correo Electrónico</label>
           <input
             type="email"
@@ -62,20 +61,10 @@ function LoginSuper() {
             placeholder="Ingrese su contraseña"
             required
           />
-          <button
-            type="submit"
-            className="login-button"
-            disabled={loading}
-          >
+          <button type="submit" className="login-button" disabled={loading}>
             {loading ? "Cargando..." : "Iniciar Sesión"}
           </button>
         </form>
-        <button
-          className="register-button"
-          onClick={() => navigate("/register-super")}
-        >
-          ¿No tienes una cuenta? Regístrate
-        </button>
       </div>
     </div>
   );

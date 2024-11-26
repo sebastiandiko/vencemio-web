@@ -1,10 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../../components/Card/Card";
+import { useUser } from "../../context/UserContext";
 import "./FavoritesPage.css";
 
-const FavoritesPage = ({ favorites, onRemoveFavorite }) => {
+const FavoritesPage = () => {
+  const { favorites, setFavorites } = useUser();
   const navigate = useNavigate();
+
+  const handleRemoveFavorite = (product) => {
+    setFavorites((prev) => prev.filter((fav) => fav.id !== product.id));
+  };
 
   return (
     <div className="favorites-container">
@@ -19,13 +25,12 @@ const FavoritesPage = ({ favorites, onRemoveFavorite }) => {
               product={product}
               supermarket={product.supermarket}
               address={product.address}
-              onClick={() => navigate(`/product-detail/${product.id}`)}
-              onFavorite={() => onRemoveFavorite(product)} // Permite eliminar de favoritos
+              onFavorite={() => handleRemoveFavorite(product)}
             />
           ))}
         </div>
       )}
-      <button className="back-button" onClick={() => navigate("/")}>
+      <button className="back-button" onClick={() => navigate("/user-home")}>
         Volver a la Página Principal
       </button>
     </div>

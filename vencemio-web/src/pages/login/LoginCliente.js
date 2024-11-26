@@ -1,44 +1,38 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // React Router para navegación
-import "./LoginCliente.css"; // Archivo CSS para estilos
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../../context/UserContext"; // Usar UserContext
+import "./LoginCliente.css";
 
 function LoginCliente() {
+  const { loginUser } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false); // Para manejar el estado de carga
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Función para manejar el inicio de sesión
   const handleLogin = async () => {
-    setLoading(true); // Inicia el estado de carga
+    setLoading(true);
     try {
-      // Realizar una solicitud POST al endpoint de inicio de sesión
       const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Guardar el token en el almacenamiento local
-        localStorage.setItem("token", data.token);
-
-        // Redirigir al UserHome
+        loginUser(data.user, data.token); // Inicializa el contexto del cliente
         alert("Inicio de sesión exitoso");
         navigate("/user-home");
       } else {
-        // Mostrar error en caso de credenciales incorrectas
         alert(data.message || "Correo o contraseña incorrectos");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       alert("Hubo un problema con el inicio de sesión. Inténtalo nuevamente.");
     } finally {
-      setLoading(false); // Termina el estado de carga
+      setLoading(false);
     }
   };
 
@@ -49,7 +43,7 @@ function LoginCliente() {
         <form
           className="login-form"
           onSubmit={(e) => {
-            e.preventDefault(); // Evitar recarga de página
+            e.preventDefault();
             handleLogin();
           }}
         >
@@ -75,12 +69,6 @@ function LoginCliente() {
             {loading ? "Cargando..." : "Iniciar Sesión"}
           </button>
         </form>
-        <button
-          className="register-button"
-          onClick={() => navigate("/register")}
-        >
-          ¿No tienes una cuenta? Regístrate
-        </button>
       </div>
     </div>
   );

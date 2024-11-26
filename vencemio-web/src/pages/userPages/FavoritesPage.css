@@ -1,11 +1,16 @@
-.favorites-container {
-    padding: 20px;
-    text-align: center;
-    background-color: #f9f9f9;
+  .favorites-page{
+  background-image: linear-gradient(#FFF5CC, #fff5ccef); /* Gradiente amarillo suave */
   }
-  
-  h1 {
-    color: #1c802d; /* Verde oscuro */
+  .favorites-container{
+    background-image: 
+    linear-gradient(to bottom, #fff5ccf3, #fff5ccf3), /* Capa semitransparente */
+    url('../../../public/logoFondo.png'); /* Imagen de fondo */
+    background-position: center;
+    background-size: 10%;
+    min-height: 100vh;
+    width: 100%;
+    padding-bottom: 20px; /* Espaciado inferior */
+    overflow-x: hidden;
   }
   
   .no-favorites-message {

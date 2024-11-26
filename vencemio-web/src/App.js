@@ -13,30 +13,32 @@ import UserHome from "./pages/userPages/UserHome";
 import PrincipalPageComercio from "./pages/PrincipalPageComercio";
 import PrincipalPageComprador from "./pages/PrincipalPageComprador";
 import FavoritesPage from "./pages/userPages/FavoritesPage"; // Importa el componente de favoritos
-
+import { UserProvider } from "./context/UserContext";
 
 function App() {
   return (
     <Router>
-      <Header />
-      <Routes>
-        {/* Redirección de la raíz al principal-comprador */}
-        <Route path="/" element={<Navigate to="/principal-comprador" />} />
-        
-        {/* Otras rutas */}
-        <Route path="/login" element={<LoginCliente />} />
-        <Route path="/register" element={<RegisterUser />} />
-        <Route path="/register-super" element={<RegisterSuper />} />
-        <Route path="/login-super" element={<LoginSuper />} />
-        <Route path="/super-dashboard" element={<SuperDashboard />} />
-        <Route path="/product-form" element={<ProductForm />} />
-        <Route path="/edit-product/:id" element={<ProductEditForm />} />
-        <Route path="/map-screen" element={<MapScreen />} />
-        <Route path="/user-home" element={<UserHome />} />
-        <Route path="/principal-comercio" element={<PrincipalPageComercio />} />
-        <Route path="/principal-comprador" element={<PrincipalPageComprador />} />
-        <Route path="/favorites" element={<FavoritesPage />} />      
-      </Routes>
+      <UserProvider>
+        <Header />
+        <Routes>
+          {/* Redirección de la raíz al principal-comprador */}
+          <Route path="/" element={<Navigate to="/principal-comprador" />} />
+          
+          {/* Otras rutas */}
+          <Route path="/login" element={<LoginCliente />} />
+          <Route path="/register" element={<RegisterUser />} />
+          <Route path="/register-super" element={<RegisterSuper />} />
+          <Route path="/login-super" element={<LoginSuper />} />
+          <Route path="/super-dashboard" element={<SuperDashboard />} />
+          <Route path="/product-form" element={<ProductForm />} />
+          <Route path="/edit-product/:id" element={<ProductEditForm />} />
+          <Route path="/map-screen" element={<MapScreen />} />
+          <Route path="/user-home" element={<UserHome />} />
+          <Route path="/principal-comercio" element={<PrincipalPageComercio />} />
+          <Route path="/principal-comprador" element={<PrincipalPageComprador />} />
+          <Route path="/favorites" element={<FavoritesPage />} />      
+        </Routes>
+      </UserProvider>
     </Router>
   );
 }

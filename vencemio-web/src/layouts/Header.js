@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./Header.css"; // Archivo CSS para estilos
-import logo from "../assets/LogoVencemio.png"; // Ya lo tienes correctamente
+import logo from "../assets/LogoVencemio.png"; // Logo importado
 import { useNavigate } from "react-router-dom"; // Para manejar rutas en React Router
+import { useUser } from "../context/UserContext"; // Importa el contexto del usuario
 
 function Header() {
+  const { user, logoutUser } = useUser(); // Accede al estado y métodos del contexto del usuario
   const [userType, setUserType] = useState("comprador"); // Estado para el tipo de usuario
   const navigate = useNavigate(); // Hook para navegación
 
@@ -26,6 +28,12 @@ function Header() {
     } else {
       navigate("/login"); // Redirige al login de compradores
     }
+  };
+
+  // Función para manejar el cierre de sesión
+  const handleLogout = () => {
+    logoutUser(); // Limpia el estado global y elimina el token
+    navigate("/"); // Redirige a la página principal
   };
 
   useEffect(() => {
@@ -55,7 +63,7 @@ function Header() {
 
   return (
     <header className="header">
-      <div className="header__logo">
+      <div className="header__logo" onClick={() => navigate("/")}>
         <img src={logo} alt="Logo" className="logo" />
         <span className="logo-text">VENCEMIO</span>
       </div>
@@ -81,9 +89,18 @@ function Header() {
         </button>
       </div>
       <div className="header__actions">
-        <button className="btn-login" onClick={handleLogin}>
-          Iniciar Sesión
-        </button>
+        {user ? (
+          <div className="header__user-info">
+            <span className="header__user-name">Hola, {user.name || "Usuario"}</span>
+            <button className="btn-logout" onClick={handleLogout}>
+              Cerrar Sesión
+            </button>
+          </div>
+        ) : (
+          <button className="btn-login" onClick={handleLogin}>
+            Iniciar Sesión
+          </button>
+        )}
       </div>
     </header>
   );

@@ -7,16 +7,34 @@ const containerStyle = {
   height: "100vh",
 };
 
-const defaultCenter = { lat: -27.4675279, lng: -58.8263367 }; // Coordenadas por defecto
+const defaultCenter = { lat: -27.4675279, lng: -58.8263367 };
 
 const MapScreen = () => {
-  const [locations, setLocations] = useState([]); // Datos de los supermercados
-  const [selected, setSelected] = useState(null); // Supermercado seleccionado
-  const [currentLocation, setCurrentLocation] = useState(null); // Ubicación actual del usuario
-  const [loading, setLoading] = useState(true); // Estado de carga
-  const [error, setError] = useState(null); // Estado de error
+  const [locations, setLocations] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [mapLoaded, setMapLoaded] = useState(false); // Estado para verificar si Google Maps se ha cargado
 
-  // Cargar ubicaciones desde la API
+  const getSupermarketIcon = (supermarketName) => {
+    const normalizeName = (name) =>
+      name.toLowerCase().replace(/\s+/g, "").replace(/[áéíóúñ]/g, (match) => {
+        const map = { á: "a", é: "e", í: "i", ó: "o", ú: "u", ñ: "n" };
+        return map[match];
+      });
+
+    const icons = {
+      impulso: "/assets/logo_impulso.png",
+      carrefour: "/assets/logo_carrefour.png",
+      elsuper: "/assets/logo_elsuper.png",
+      supermax: "/assets/logo_supermax.png",
+      lareina: "/assets/logo_lareina.png",
+    };
+
+    return icons[normalizeName(supermarketName)] || "/assets/default-icon.png";
+  };
+
   useEffect(() => {
     const fetchLocations = async () => {
       try {
@@ -42,7 +60,6 @@ const MapScreen = () => {
     fetchLocations();
   }, []);
 
-  // Obtener la ubicación actual del usuario
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -65,44 +82,82 @@ const MapScreen = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_API_KEY}>
+    <LoadScript
+      googleMapsApiKey={process.env.REACT_APP_GOOGLE_API_KEY}
+      onLoad={() => setMapLoaded(true)} // Establece el estado como cargado
+    >
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={currentLocation || defaultCenter}
         zoom={currentLocation ? 16 : 14}
+        onLoad={() => setMapLoaded(true)} // Marca que el mapa está cargado
       >
-        {/* Marcador para la ubicación actual */}
-        {currentLocation && (
-          <Marker
-            position={currentLocation}
-            icon={{
-              url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-            }}
-          />
-        )}
+        {mapLoaded && ( // Solo ejecuta este código si el mapa está completamente cargado
+          <>
+            {currentLocation && (
+              <Marker
+                position={currentLocation}
+                icon={{
+                  url: "https://maps.gstatic.com/mapfiles/ms2/micons/man.png",
+                  scaledSize: new window.google.maps.Size(40, 40),
+                }}
+              />
+            )}
 
-        {/* Marcadores de supermercados */}
-        {locations.map((location) => (
-          <Marker
-            key={location.id}
-            position={{ lat: location.lat, lng: location.lng }}
-            onClick={() => setSelected(location)} // Seleccionar el supermercado
-          />
-        ))}
+            {locations.map((location) => (
+              <Marker
+                key={location.id}
+                position={{ lat: location.lat, lng: location.lng }}
+                icon={{
+                  url: getSupermarketIcon(location.name),
+                  scaledSize: new window.google.maps.Size(40, 40),
+                }}
+                onClick={() => setSelected(location)}
+              />
+            ))}
 
-        {/* InfoWindow para el supermercado seleccionado */}
-        {selected && (
-          <InfoWindow
-            position={{ lat: selected.lat, lng: selected.lng }}
-            onCloseClick={() => setSelected(null)} // Cerrar InfoWindow
-          >
-            <div>
-              <h3>{selected.name}</h3>
-              <p>Dirección: {selected.address}</p>
-              <p>Ciudad: {selected.ciudad}</p>
-              <p>Teléfono: {selected.telefono}</p>
-            </div>
-          </InfoWindow>
+            {selected && (
+              <InfoWindow
+                position={{ lat: selected.lat, lng: selected.lng }}
+                onCloseClick={() => setSelected(null)}
+              >
+                <div
+                  style={{
+                    fontFamily: "Arial, sans-serif",
+                    padding: "10px",
+                    textAlign: "center",
+                    backgroundColor: "#fff8e1",
+                    borderRadius: "10px",
+                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
+                    maxWidth: "250px",
+                  }}
+                >
+                  <img
+                    src={getSupermarketIcon(selected.name)}
+                    alt={selected.name}
+                    style={{
+                      width: "50px",
+                      marginBottom: "10px",
+                      borderRadius: "50%",
+                      border: "2px solid #1c802d",
+                    }}
+                  />
+                  <h3 style={{ margin: "0", fontSize: "16px", color: "#2c3e50" }}>
+                    {selected.name}
+                  </h3>
+                  <p style={{ margin: "5px 0", fontSize: "14px", color: "#34495e" }}>
+                    <strong>Dirección:</strong> {selected.address}
+                  </p>
+                  <p style={{ margin: "5px 0", fontSize: "14px", color: "#34495e" }}>
+                    <strong>Ciudad:</strong> {selected.ciudad}
+                  </p>
+                  <p style={{ margin: "5px 0", fontSize: "14px", color: "#34495e" }}>
+                    <strong>Teléfono:</strong> {selected.telefono}
+                  </p>
+                </div>
+              </InfoWindow>
+            )}
+          </>
         )}
       </GoogleMap>
     </LoadScript>

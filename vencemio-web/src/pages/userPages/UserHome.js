@@ -2,16 +2,51 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Card from "../../components/Card/Card";
+import { useUser } from "../../context/UserContext";
 import "./UserHome.css";
 
 export default function UserHome() {
+  const { favorites, setFavorites } = useUser(); // Gestionar favoritos desde el contexto
   const [products, setProducts] = useState([]);
-  const [favorites, setFavorites] = useState([]); // Lista de favoritos
   const [supermarkets, setSupermarkets] = useState({});
   const [categories, setCategories] = useState([]);
   const [selectedSuper, setSelectedSuper] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [currentLocation, setCurrentLocation] = useState(null); // Ubicación del usuario
   const navigate = useNavigate();
+
+  // Función para obtener la distancia entre dos coordenadas
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const toRad = (value) => (value * Math.PI) / 180;
+    const R = 6371; // Radio de la Tierra en km
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distancia en km
+  };
+
+  // Obtener la ubicación actual del usuario
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCurrentLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (err) => {
+          console.error("Error al obtener la ubicación actual:", err);
+        }
+      );
+    } else {
+      console.error("Geolocalización no soportada por este navegador.");
+    }
+  }, []);
 
   useEffect(() => {
     const fetchFilters = async () => {
@@ -21,6 +56,8 @@ export default function UserHome() {
           acc[supermarket.cod_super] = {
             cadena: supermarket.cadena,
             direccion: `${supermarket.direccion}, ${supermarket.ciudad}, ${supermarket.provincia}`,
+            lat: supermarket.ubicacion.latitud, // Guardar latitud
+            lng: supermarket.ubicacion.longitud, // Guardar longitud
           };
           return acc;
         }, {});
@@ -50,7 +87,30 @@ export default function UserHome() {
       }
 
       const response = await axios.get(url);
-      setProducts(response.data);
+      const fetchedProducts = response.data;
+
+      // Si tenemos la ubicación actual, calcular distancias
+      if (currentLocation) {
+        fetchedProducts.sort((a, b) => {
+          const superA = supermarkets[a.cod_super];
+          const superB = supermarkets[b.cod_super];
+          const distanceA = calculateDistance(
+            currentLocation.lat,
+            currentLocation.lng,
+            superA.lat,
+            superA.lng
+          );
+          const distanceB = calculateDistance(
+            currentLocation.lat,
+            currentLocation.lng,
+            superB.lat,
+            superB.lng
+          );
+          return distanceA - distanceB; // Ordenar de más cercano a más lejano
+        });
+      }
+
+      setProducts(fetchedProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
       alert("No se pudieron cargar los productos.");
@@ -59,13 +119,11 @@ export default function UserHome() {
 
   useEffect(() => {
     fetchProducts();
-  }, [selectedSuper, selectedCategory]);
+  }, [selectedSuper, selectedCategory, currentLocation]);
 
   const handleFavoriteToggle = (product, isFavorite) => {
     setFavorites((prev) => {
-      if (isFavorite) {
-        return [...prev, product];
-      }
+      if (isFavorite) return [...prev, product];
       return prev.filter((fav) => fav.id !== product.id);
     });
   };
@@ -110,29 +168,21 @@ export default function UserHome() {
 
       <button
         className="favorites-button"
-        onClick={() => navigate("/favorites", { state: { favorites } })}
+        onClick={() => navigate("/favorites")}
       >
         Ver Favoritos ❤️
       </button>
-
+      
       <div className="product-list">
-        {products.map((product) => {
-          const supermarketInfo = supermarkets[product.cod_super] || {
-            cadena: "Supermercado no disponible",
-            direccion: "Dirección no disponible",
-          };
-
-          return (
-            <Card
-              key={product.id}
-              product={product}
-              supermarket={supermarketInfo.cadena}
-              address={supermarketInfo.direccion}
-              onClick={() => navigate(`/product-detail/${product.id}`)}
-              onFavorite={handleFavoriteToggle}
-            />
-          );
-        })}
+        {products.map((product) => (
+          <Card
+            key={product.id}
+            product={product}
+            supermarket={supermarkets[product.cod_super]?.cadena || "N/A"}
+            address={supermarkets[product.cod_super]?.direccion || "N/A"}
+            onFavorite={handleFavoriteToggle}
+          />
+        ))}
       </div>
 
       <button className="map-button" onClick={() => navigate("/map-screen")}>
