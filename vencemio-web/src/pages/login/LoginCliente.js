@@ -43,43 +43,45 @@ function LoginCliente() {
   };
 
   return (
-    <div className="login-cliente-container">
-      <h1 className="login-title">Iniciar Sesión - Cliente</h1>
-      <form
-        className="login-form"
-        onSubmit={(e) => {
-          e.preventDefault(); // Evitar recarga de página
-          handleLogin();
-        }}
-      >
-        <label htmlFor="email">Correo Electrónico</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Ingrese su correo"
-          required
-        />
-        <label htmlFor="password">Contraseña</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Ingrese su contraseña"
-          required
-        />
-        <button type="submit" className="login-button" disabled={loading}>
-          {loading ? "Cargando..." : "Iniciar Sesión"}
+    <div className="login-cliente">
+      <div className="login-cliente-container">
+        <h1 className="login-title">Iniciar Sesión - Cliente</h1>
+        <form
+          className="login-form"
+          onSubmit={(e) => {
+            e.preventDefault(); // Evitar recarga de página
+            handleLogin();
+          }}
+        >
+          <label htmlFor="email">Correo Electrónico</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Ingrese su correo"
+            required
+          />
+          <label htmlFor="password">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Ingrese su contraseña"
+            required
+          />
+          <button type="submit" className="login-button" disabled={loading}>
+            {loading ? "Cargando..." : "Iniciar Sesión"}
+          </button>
+        </form>
+        <button
+          className="register-button"
+          onClick={() => navigate("/register")}
+        >
+          ¿No tienes una cuenta? Regístrate
         </button>
-      </form>
-      <button
-        className="register-button"
-        onClick={() => navigate("/register")}
-      >
-        ¿No tienes una cuenta? Regístrate
-      </button>
+      </div>
     </div>
   );
 }

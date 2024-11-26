@@ -1,63 +1,74 @@
+.register-page{
+  background-image: linear-gradient(#FFF5CC, #fff5ccef); /* Gradiente amarillo suave */
+}
 .register-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    height: 100vh;
-    background-color: #f5f5f5;
-  }
-  
-  .register-title {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #4a148c;
-  }
-  
-  .register-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 300px;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .register-form label {
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .register-form input {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .register-button {
-    padding: 10px;
-    background-color: #4a148c;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-  }
-  
-  .register-button:hover {
-    background-color: #6a1b9a;
-  }
-  
-  .login-button {
-    margin-top: 10px;
-    background-color: transparent;
-    color: #4a148c;
-    border: none;
-    cursor: pointer;
-    text-decoration: underline;
-    font-size: 14px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: 
+    linear-gradient(#FFF5CC, #fff5ccb0), /* Capa semitransparente encima */
+    url('../../../public/logoFondo.png'); /* Imagen de fondo */
+  background-repeat: no-repeat;
+  background-size: 40%; /* Ajusta la imagen */
+  background-position: center;}
+
+.register-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #1c802d; /* Verde oscuro */
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 300px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.register-form label {
+  font-weight: bold;
+  color: #1c802d; /* Verde oscuro */
+}
+
+.register-form input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.register-button {
+  padding: 10px;
+  background-color: #1c802d; /* Verde oscuro */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.register-button:hover {
+  background-color: #fcc40b; /* Amarillo vibrante */
+}
+
+.login-button {
+  margin-top: 10px;
+  background-color: transparent;
+  color: #1c802d; /* Verde oscuro */
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.login-button:hover {
+  color: #fcc40b; /* Amarillo vibrante */
+}

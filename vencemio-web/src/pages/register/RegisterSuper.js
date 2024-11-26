@@ -108,80 +108,85 @@ function RegisterSuper() {
   };
 
   return (
-    <div className="register-super-container">
-      <h1 className="register-super-title">Registrar Supermercado</h1>
-      <form
-        className="register-super-form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleRegister();
-        }}
-      >
-        <input
-          type="text"
-          placeholder="Cadena"
-          value={name}
-          onChange={handleNameChange}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Dirección"
-          value={direccion}
-          onChange={handleDireccionChange}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Ciudad"
-          value={ciudad}
-          onChange={(e) => setCiudad(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Provincia"
-          value={provincia}
-          onChange={(e) => setProvincia(e.target.value)}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Correo Electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Teléfono"
-          value={telefono}
-          onChange={(e) => setTelefono(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <p>
-          Cod Super: <strong>{codSuper || "N/A"}</strong>
-        </p>
-        <button
-          type="button"
-          onClick={getCoordinates}
-          className="get-coordinates-button"
+    <div className="register-super-page">
+      <div className="register-super-container">
+        <h1 className="register-super-title">Registrar Supermercado</h1>
+        <form
+          className="register-super-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleRegister();
+          }}
         >
-          Obtener Ubicación
-        </button>
-        <p>
-          Latitud: {ubicacion.latitud || "N/A"}, Longitud: {ubicacion.longitud || "N/A"}
-        </p>
-        <button type="submit" className="register-button">
-          Registrar
-        </button>
-      </form>
+          <label>Información Básica</label>
+          <input
+            type="text"
+            placeholder="Nombre de la cadena"
+            value={name}
+            onChange={handleNameChange}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Provincia"
+            value={provincia}
+            onChange={(e) => setProvincia(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Ciudad"
+            value={ciudad}
+            onChange={(e) => setCiudad(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Dirección"
+            value={direccion}
+            onChange={handleDireccionChange}
+            required
+          />
+          <label>Datos de Contacto</label>
+          <input
+            type="email"
+            placeholder="Correo Electrónico"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Teléfono"
+            value={telefono}
+            onChange={(e) => setTelefono(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <p>
+            Código Super: <strong>{codSuper || "N/A"}</strong>
+          </p>
+          <label>Ubicación</label>
+          <button
+            type="button"
+            onClick={getCoordinates}
+            className="get-coordinates-button"
+          >
+            Obtener Ubicación
+          </button>
+          <p className="lat-long-display">
+            Latitud: {ubicacion.latitud || "N/A"}, Longitud: {ubicacion.longitud || "N/A"}
+          </p>
+          <button type="submit" className="register-button">
+            Registrar
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

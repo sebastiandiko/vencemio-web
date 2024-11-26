@@ -53,48 +53,50 @@ function RegisterPage() {
   };
 
   return (
-    <div className="register-container">
-      <h1 className="register-title">Crea tu Cuenta</h1>
-      <form onSubmit={handleRegister} className="register-form">
-        <label htmlFor="name">Nombre</label>
-        <input
-          type="text"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Ingresa tu nombre"
-        />
-        <label htmlFor="lastName">Apellido</label>
-        <input
-          type="text"
-          id="lastName"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          placeholder="Ingresa tu apellido"
-        />
-        <label htmlFor="email">Correo Electrónico</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Ingresa tu correo"
-        />
-        <label htmlFor="password">Contraseña</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Crea una contraseña"
-        />
-        <button type="submit" className="register-button">
-          Registrarse
+    <div className="register-page">
+      <div className="register-container">
+        <h1 className="register-title">Crea tu Cuenta</h1>
+        <form onSubmit={handleRegister} className="register-form">
+          <label htmlFor="name">Nombre</label>
+          <input
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Ingresa tu nombre"
+          />
+          <label htmlFor="lastName">Apellido</label>
+          <input
+            type="text"
+            id="lastName"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            placeholder="Ingresa tu apellido"
+          />
+          <label htmlFor="email">Correo Electrónico</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Ingresa tu correo"
+          />
+          <label htmlFor="password">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Crea una contraseña"
+          />
+          <button type="submit" className="register-button">
+            Registrarse
+          </button>
+        </form>
+        <button className="login-button" onClick={() => navigate("/login")}>
+          Ya tienes una cuenta? Inicia sesión
         </button>
-      </form>
-      <button className="login-button" onClick={() => navigate("/login")}>
-        Ya tienes una cuenta? Inicia sesión
-      </button>
+      </div>
     </div>
   );
 }
