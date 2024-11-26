@@ -1,20 +1,30 @@
 import React, { useEffect, useState } from "react";
 import "./Header.css"; // Archivo CSS para estilos
+import logo from "../assets/LogoVencemio.png"; // Ya lo tienes correctamente
+import { useNavigate } from "react-router-dom"; // Para manejar rutas en React Router
 
 function Header() {
   const [userType, setUserType] = useState("comprador"); // Estado para el tipo de usuario
+  const navigate = useNavigate(); // Hook para navegación
 
   // Función para alternar entre empresas y compradores
   const handleToggle = (type) => {
     setUserType(type); // Actualiza el estado del tipo de usuario
+
+    // Redirige según el tipo de usuario
+    if (type === "empresa") {
+      navigate("/principal-comercio"); // Redirige a la página principal de comercio
+    } else if (type === "comprador") {
+      navigate("/principal-comprador"); // Redirige a la página principal del comprador
+    }
   };
 
   // Función para manejar el inicio de sesión
   const handleLogin = () => {
     if (userType === "empresa") {
-      window.location.href = "/login-super"; // Redirige al login de empresas
+      navigate("/login-super"); // Redirige al login de empresas
     } else {
-      window.location.href = "/login"; // Redirige al login de compradores
+      navigate("/login"); // Redirige al login de compradores
     }
   };
 
@@ -46,7 +56,8 @@ function Header() {
   return (
     <header className="header">
       <div className="header__logo">
-        <img src="https://via.placeholder.com/100x30" alt="Logo" />
+        <img src={logo} alt="Logo" className="logo" />
+        <span className="logo-text">VENCEMIO</span>
       </div>
       <nav className="header__nav">
         <a href="#como-funciona">¿Cómo funciona?</a>
@@ -57,28 +68,22 @@ function Header() {
       </nav>
       <div className="header__toggle">
         <button
-          className={`header__toggle-btn ${userType === "empresa" ? "active" : ""}`}
-          onClick={() => handleToggle("empresa")}
-        >
-          Para empresas
-        </button>
-        <button
           className={`header__toggle-btn ${userType === "comprador" ? "active" : ""}`}
           onClick={() => handleToggle("comprador")}
         >
-          Para compradores
+          Comprador
+        </button>
+        <button
+          className={`header__toggle-btn ${userType === "empresa" ? "active" : ""}`}
+          onClick={() => handleToggle("empresa")}
+        >
+          Empresa
         </button>
       </div>
       <div className="header__actions">
         <button className="btn-login" onClick={handleLogin}>
           Iniciar Sesión
         </button>
-        <button className="btn-contact">Contacto</button>
-        <label className="toggle-switch">
-          <input type="checkbox" />
-          <span className="slider"></span>
-        </label>
-        <span>English</span>
       </div>
     </header>
   );

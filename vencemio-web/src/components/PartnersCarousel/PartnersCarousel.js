@@ -3,13 +3,18 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./PartnersCarousel.css"; // Archivo CSS para estilos
+import logo_impulso from "../../assets/logo_impulso.png";
+import logo_carrefour from "../../assets/logo_carrefour.png";
+import logo_supermax from "../../assets/logo_supermax.png";
+import logo_elsuper from '../../assets/logo_elsuper.png';
+import logo_lareina from '../../assets/logo_lareina.png';
 
 const partners = [
-  { id: 1, name: "Yoplait", logo: "/logos/yoplait.png" },
-  { id: 2, name: "Chobani", logo: "/logos/chobani.png" },
-  { id: 3, name: "OXXO", logo: "/logos/oxxo.png" },
-  { id: 4, name: "Heineken", logo: "/logos/heineken.png" },
-  { id: 5, name: "FUD", logo: "/logos/fud.png" },
+  { id: 1, name: "Impulso", logo: logo_impulso},
+  { id: 2, name: "Carrefour", logo: logo_carrefour },
+  { id: 3, name: "Supermax", logo: logo_supermax },
+  { id: 4, name: "El Super", logo: logo_elsuper },
+  { id: 5, name: "La Reina", logo: logo_lareina },
 ];
 
 function PartnersCarousel() {

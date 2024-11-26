@@ -4,21 +4,21 @@ import step1Icon from "../../assets/loupe.png";
 import step2Icon from "../../assets/map.png";
 import step3Icon from "../../assets/shopping-cart.png";
 import step4Icon from "../../assets/growth.png";
-function HowItWorks() {
 
+function HowItWorks() {
   const steps = [
     {
       id: 1,
-      title: "Explora las promociones disponibles",
+      title: "Explorá las promociones disponibles",
       description:
-        "Navega por nuestra plataforma para descubrir los productos en oferta en supermercados cercanos. Puedes filtrar las promociones por categoría, porcentaje de descuento o ubicación.",
+        "Navegá por nuestra plataforma para descubrir los productos en oferta en supermercados cercanos. Puedes filtrar las promociones por categoría, porcentaje de descuento o ubicación.",
       icon: step1Icon,
     },
     {
       id: 2,
-      title: "Selecciona tu supermercado preferido",
+      title: "Seleccioná tu supermercado preferido",
       description:
-        "Encuentra los supermercados adheridos cerca de ti. Revisa las promociones específicas de cada tienda para planificar tu compra.",
+        "Encontrá los supermercados adheridos cerca de ti. Revisa las promociones específicas de cada tienda para planificar tu compra.",
       icon: step2Icon,
     },
     {
@@ -30,9 +30,9 @@ function HowItWorks() {
     },
     {
       id: 4,
-      title: "Aprovecha las ofertas y ahorra",
+      title: "Aprovechá las ofertas y ahorra",
       description:
-        "Compra los productos que seleccionaste directamente en el supermercado y disfruta de descuentos significativos mientras contribuyes a reducir el desperdicio de alimentos.",
+        "Comprá los productos que seleccionaste directamente en el supermercado y disfrutá de descuentos significativos mientras contribuyes a reducir el desperdicio de alimentos.",
       icon: step4Icon,
     },
   ];
@@ -51,9 +51,6 @@ function HowItWorks() {
             <p className="step-description">{step.description}</p>
           </div>
         ))}
-      </div>
-      <div className="how-it-works-action">
-        <button className="action-button">Ver Promociones</button>
       </div>
     </section>
   );

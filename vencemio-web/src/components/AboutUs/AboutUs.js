@@ -1,5 +1,7 @@
 import React from "react";
 import "./AboutUs.css"; // Archivo CSS para estilos
+import foto_matias from "../../assets/foto_matias.jpg";
+import foto_sebastian from "../../assets/foto_seba.jpg";
 
 function AboutUs() {
   return (
@@ -36,47 +38,24 @@ function AboutUs() {
         </div>
       </div>
 
-      {/* Valores */}
-      <div className="values">
-        <h3>Nuestros Valores</h3>
-        <ul>
-          <li>
-            <strong>Innovación:</strong> Utilizamos tecnología para crear soluciones prácticas y
-            eficientes.
-          </li>
-          <li>
-            <strong>Sostenibilidad:</strong> Promovemos un modelo de consumo más consciente.
-          </li>
-          <li>
-            <strong>Responsabilidad Social:</strong> Ayudamos a mejorar la calidad de vida de las
-            personas y a reducir el impacto ambiental.
-          </li>
-          <li>
-            <strong>Compromiso:</strong> Trabajamos con pasión para ofrecer beneficios tangibles a
-            consumidores y supermercados.
-          </li>
-        </ul>
-      </div>
-
       {/* El Equipo Detrás */}
       <div className="team">
         <h3>Conoce a Nuestro Equipo</h3>
         <div className="team-members">
           <div className="team-member">
-            <img src="/path/to/matias-photo.jpg" alt="Matías Zalazar" />
+            <img src={foto_matias} alt="Matías Zalazar"/>
             <h4>Matías Zalazar</h4>
             <p>Co-Fundador</p>
             <p>"Creemos en un futuro donde desperdiciar ya no sea una opción."</p>
           </div>
           <div className="team-member">
-            <img src="/path/to/sebastian-photo.jpg" alt="Sebastián Dikowiec" />
+            <img src={foto_sebastian} alt="Sebastian Dikowiec"/>
             <h4>Sebastián Dikowiec</h4>
             <p>Co-Fundador</p>
             <p>"Un producto desechado hoy puede ser una oportunidad mañana."</p>
           </div>
         </div>
         <p>Únete a nuestro movimiento y sé parte del cambio.</p>
-        <button className="cta-button">Súmate a la Comunidad</button>
       </div>
     </section>
   );
