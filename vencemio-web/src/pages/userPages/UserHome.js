@@ -12,6 +12,7 @@ export default function UserHome() {
   const [categories, setCategories] = useState([]);
   const [selectedSuper, setSelectedSuper] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchName, setSearchName] = useState(""); // Filtro por nombre
   const [currentLocation, setCurrentLocation] = useState(null); // Ubicación del usuario
   const navigate = useNavigate();
 
@@ -87,7 +88,7 @@ export default function UserHome() {
       }
 
       const response = await axios.get(url);
-      const fetchedProducts = response.data;
+      let fetchedProducts = response.data;
 
       // Si tenemos la ubicación actual, calcular distancias
       if (currentLocation) {
@@ -110,6 +111,13 @@ export default function UserHome() {
         });
       }
 
+      // Filtrar por nombre si hay algo escrito en searchName
+      if (searchName) {
+        fetchedProducts = fetchedProducts.filter((product) =>
+          product.nombre.toLowerCase().includes(searchName.toLowerCase())
+        );
+      }
+
       setProducts(fetchedProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -119,7 +127,7 @@ export default function UserHome() {
 
   useEffect(() => {
     fetchProducts();
-  }, [selectedSuper, selectedCategory, currentLocation]);
+  }, [selectedSuper, selectedCategory, searchName, currentLocation]);
 
   const handleFavoriteToggle = (product, isFavorite) => {
     setFavorites((prev) => {
@@ -163,6 +171,17 @@ export default function UserHome() {
               </option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label htmlFor="searchName">Buscar por Nombre:</label>
+          <input
+            type="text"
+            id="searchName"
+            placeholder="Buscar producto..."
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
+          />
         </div>
       </div>
 
