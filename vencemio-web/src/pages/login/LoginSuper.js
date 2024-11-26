@@ -65,6 +65,12 @@ function LoginSuper() {
             {loading ? "Cargando..." : "Iniciar Sesión"}
           </button>
         </form>
+        <button
+          className="register-button"
+          onClick={() => navigate("/register-super")} // Navega a la página de registro
+        >
+          ¿No tienes cuenta? Crear cuenta
+        </button>
       </div>
     </div>
   );

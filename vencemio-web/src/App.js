@@ -26,7 +26,7 @@ function App() {
           
           {/* Otras rutas */}
           <Route path="/login" element={<LoginCliente />} />
-          <Route path="/register" element={<RegisterUser />} />
+          <Route path="/register-user" element={<RegisterUser />} />
           <Route path="/register-super" element={<RegisterSuper />} />
           <Route path="/login-super" element={<LoginSuper />} />
           <Route path="/super-dashboard" element={<SuperDashboard />} />

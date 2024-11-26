@@ -1,7 +1,9 @@
 import React from "react";
 import "./BenefitsSuper.css"; // Archivo CSS para los estilos
+import { useNavigate } from "react-router-dom";
 
 function BenefitsForBusiness() {
+  const navigate = useNavigate();
   return (
     <section id="beneficios" className="benefits-section">
       <h2 className="benefits-title">Beneficios de Usar Vencemio como Empresa</h2>
@@ -58,7 +60,9 @@ function BenefitsForBusiness() {
       {/* Llamado a la acción */}
       <div className="benefits-cta">
         <p>Haz que tu supermercado forme parte del cambio.</p>
-        <button className="cta-button">Regístrate Ahora</button>
+        <button className="cta-button" onClick={() => navigate("/login-super")}>
+          Únete Ahora
+        </button>     
       </div>
     </section>
   );

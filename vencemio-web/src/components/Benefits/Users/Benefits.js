@@ -1,7 +1,10 @@
 import React from "react";
 import "./Benefits.css"; // Archivo CSS para los estilos
+import {useNavigate} from "react-router-dom";
 
 function Benefits() {
+  const navigate = useNavigate();
+
   return (
     <section id="beneficios" className="benefits-section">
       <h2 className="benefits-title">Beneficios de Usar Vencemio</h2>
@@ -47,7 +50,9 @@ function Benefits() {
       {/* Llamado a la acción */}
       <div className="benefits-cta">
         <p>Con Vencemio, todos ganamos.</p>
-        <button className="cta-button">Únete Ahora</button>
+        <button className="cta-button" onClick={() => navigate("/login")}>
+          Únete Ahora
+        </button>      
       </div>
     </section>
   );

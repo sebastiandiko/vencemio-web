@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Card.css";
 
-const Card = ({ product, supermarket, address, onClick, onFavorite }) => {
+const CardSuper = ({ product, onEdit, onDelete }) => {
   const {
     nombre,
     precio,
@@ -11,42 +11,45 @@ const Card = ({ product, supermarket, address, onClick, onFavorite }) => {
     imagen,
   } = product;
 
-  const [isFavorite, setIsFavorite] = useState(false);
-
-  const handleFavoriteClick = () => {
-    setIsFavorite(!isFavorite); // Update local state
-    if (onFavorite) onFavorite(product, !isFavorite); // Notify parent
-  };
-
   return (
     <div className="card">
-      <div className="card-discount-badge">{Math.round(porcentaje_descuento)}% OFF</div>
+      {/* Badge de descuento */}
+      <div className="card-discount-badge">
+        {Math.round(porcentaje_descuento)}% OFF
+      </div>      
+      {/* Imagen del producto */}
       <img
         src={imagen || "/default-image.jpg"}
         alt={nombre}
         className="card-image"
       />
+      {/* Título del producto */}
       <h3 className="card-title">{nombre}</h3>
-      <p className="card-address">
-        📍 {supermarket} - {address}
-      </p>
       <div className="card-prices">
         <p className="card-original-price">${precio}</p>
         <p className="card-discounted-price">${precio_descuento}</p>
       </div>
+      {/* Fecha de vencimiento */}
       <p className="card-expiration">
         vto - {new Date(fecha_vencimiento).toLocaleDateString()}
       </p>
+      {/* Acciones: Editar y Eliminar */}
       <div className="card-actions">
         <button
-          className={`favorite-button ${isFavorite ? "favorited" : ""}`}
-          onClick={handleFavoriteClick}
+          className="edit-button"
+          onClick={onEdit}
         >
-          {isFavorite ? "❤️" : "🤍"}
+          Editar
+        </button>
+        <button
+          className="delete-button"
+          onClick={onDelete}
+        >
+          Eliminar
         </button>
       </div>
     </div>
   );
 };
 
-export default Card;
+export default CardSuper;

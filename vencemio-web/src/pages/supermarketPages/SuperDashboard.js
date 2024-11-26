@@ -1,16 +1,20 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext"; // Importa el contexto
+import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
+import CardSuper from "../../components/Card/CardSuper";
 import "./SuperDashboard.css";
 
 export default function SuperDashboard() {
-  const { logout, superuser } = useContext(AuthContext); // Accede al contexto
+  const { logout, superuser } = useContext(AuthContext);
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Validar si el usuario está autenticado
+  // Verificar autenticación
   useEffect(() => {
     if (!superuser) {
       alert("Por favor, inicie sesión.");
@@ -25,6 +29,7 @@ export default function SuperDashboard() {
         `http://localhost:5000/api/productos/byCodSuper/${superuser.cod_super}`
       );
       setProducts(response.data);
+      setFilteredProducts(response.data);
     } catch (error) {
       console.error("Error al obtener productos:", error);
     } finally {
@@ -32,24 +37,52 @@ export default function SuperDashboard() {
     }
   };
 
+  // Fetch de categorías
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/tipos_product");
+      setCategories(response.data.map((category) => category.nombre)); // Usamos "nombre" en lugar de "codigo"
+    } catch (error) {
+      console.error("Error al obtener categorías:", error);
+    }
+  };
+
   useEffect(() => {
     if (superuser) {
       fetchProducts();
+      fetchCategories();
     }
   }, [superuser]);
 
-  // Función para agregar un producto
+  // Filtrar productos por categoría
+  const handleFilterCategory = (e) => {
+    const category = e.target.value;
+    setSelectedCategory(category);
+
+    if (category) {
+      const filtered = products.filter(
+        (product) =>
+          product.cod_tipo?.toLowerCase().trim() === category.toLowerCase().trim()
+      );
+      setFilteredProducts(filtered);
+    } else {
+      setFilteredProducts(products); // Mostrar todos si no hay categoría seleccionada
+    }
+  };
+
   const handleAddProduct = () => {
     navigate("/product-form");
   };
 
-  // Función para eliminar un producto
   const handleDeleteProduct = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/productos/${id}`);
       alert("Producto eliminado exitosamente.");
       setProducts((prevProducts) =>
         prevProducts.filter((product) => product.id !== id)
+      );
+      setFilteredProducts((prevFiltered) =>
+        prevFiltered.filter((product) => product.id !== id)
       );
     } catch (error) {
       console.error("Error al eliminar producto:", error);
@@ -62,43 +95,52 @@ export default function SuperDashboard() {
     navigate("/login-super");
   };
 
-  // Render de productos con el botón Editar
-  const renderProduct = (product) => (
-    <div key={product.id} className="product-item">
-      <h3>{product.nombre}</h3>
-      <p>Precio: ${product.precio}</p>
-      <p>Stock: {product.stock}</p>
-      <p>Código de Barra: {product.codigo_barra}</p>
-      <button
-        className="edit-button"
-        onClick={() => navigate(`/edit-product/${product.id}`)} // Redirige al formulario de edición
-      >
-        Editar
-      </button>
-      <button
-        className="delete-button"
-        onClick={() => handleDeleteProduct(product.id)} // Manejar eliminación
-      >
-        Eliminar
-      </button>
-    </div>
-  );
-
   if (loading) {
     return <p>Cargando productos...</p>;
   }
 
   return (
-    <div>
+    <div className="dashboard-container">
       <h1>Dashboard del Supermercado</h1>
+
+      {/* Filtro por categoría */}
+      <div className="controls">
+        <label htmlFor="categoryFilter">Filtrar por categoría:</label>
+        <select
+          id="categoryFilter"
+          className="filter-select"
+          value={selectedCategory}
+          onChange={handleFilterCategory}
+        >
+          <option value="">Todas las categorías</option>
+          {categories.map((category, index) => (
+            <option key={index} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <button onClick={handleAddProduct} className="add-product-button">
         Agregar Producto
       </button>
+
+      {/* Lista de productos */}
       <div className="product-list">
-        {products.length > 0
-          ? products.map(renderProduct)
-          : "No hay productos disponibles."}
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <CardSuper
+              key={product.id}
+              product={product}
+              onEdit={() => navigate(`/edit-product/${product.id}`)}
+              onDelete={() => handleDeleteProduct(product.id)}
+            />
+          ))
+        ) : (
+          <p>No hay productos disponibles.</p>
+        )}
       </div>
+
       <button onClick={handleLogout} className="logout-button">
         Cerrar Sesión
       </button>
