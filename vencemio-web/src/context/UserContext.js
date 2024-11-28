@@ -1,32 +1,36 @@
-// src/contexts/UserContext.js
 import { createContext, useContext, useState, useEffect } from "react";
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const loginUser = (userData, token) => {
     setUser(userData);
     localStorage.setItem("user_token", token);
+    localStorage.setItem("user_data", JSON.stringify(userData)); // Guardamos también los datos del usuario
   };
 
   const logoutUser = () => {
     setUser(null);
     localStorage.removeItem("user_token");
+    localStorage.removeItem("user_data");
   };
 
   useEffect(() => {
     const storedToken = localStorage.getItem("user_token");
-    if (storedToken) {
-      // Aquí puedes verificar el token y cargar datos del usuario
-      const userData = JSON.parse(localStorage.getItem("user_data")); // Opcional si guardas info extra
-      setUser(userData);
+    const storedUserData = JSON.parse(localStorage.getItem("user_data"));
+    if (storedToken && storedUserData) {
+      setUser(storedUserData);
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
     }
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, loginUser, logoutUser }}>
+    <UserContext.Provider value={{ user, isAuthenticated, loginUser, logoutUser }}>
       {children}
     </UserContext.Provider>
   );

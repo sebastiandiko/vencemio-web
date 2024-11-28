@@ -6,24 +6,28 @@ import { useUser } from "../../context/UserContext";
 import "./UserHome.css";
 
 export default function UserHome() {
-  const { favorites, setFavorites } = useUser(); // Gestionar favoritos desde el contexto
+  const { user, favorites, setFavorites } = useUser(); // Obtener el user desde el contexto
   const [products, setProducts] = useState([]); // Todos los productos
   const [supermarkets, setSupermarkets] = useState({});
   const [categories, setCategories] = useState([]);
   const [selectedSuper, setSelectedSuper] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [searchName, setSearchName] = useState(""); // Filtro por nombre
-  const [currentLocation, setCurrentLocation] = useState(null); // Ubicación del usuario
-  const [isLoadingLocation, setIsLoadingLocation] = useState(true); // Estado de carga para la ubicación
-  const [showLoadingScreen, setShowLoadingScreen] = useState(true); // Controla la pantalla de carga
+  const [searchName, setSearchName] = useState("");
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(true);
+  const [showLoadingScreen, setShowLoadingScreen] = useState(true);
   const [nearbyProducts, setNearbyProducts] = useState([]); // Productos más cercanos
-  const [productsBySupermarket, setProductsBySupermarket] = useState({}); // Productos agrupados por supermercado
+  const [productsBySupermarket, setProductsBySupermarket] = useState({});
+  const [userPreferences, setUserPreferences] = useState([]); // Preferencias del usuario
   const navigate = useNavigate();
+
+  const userId = user?.id; // Obtener el `userId` desde el contexto de usuario
+  const userUid = user?.uid; // Obtener el `uid` desde el contexto de usuario
 
   // Función para obtener la distancia entre dos coordenadas
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const toRad = (value) => (value * Math.PI) / 180;
-    const R = 6371; // Radio de la Tierra en km
+    const R = 6371;
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
     const a =
@@ -31,7 +35,7 @@ export default function UserHome() {
       Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distancia en km
+    return R * c;
   };
 
   // Obtener la ubicación actual del usuario
@@ -65,6 +69,7 @@ export default function UserHome() {
     }
   }, [isLoadingLocation]);
 
+  // Fetch de filtros y preferencias
   useEffect(() => {
     const fetchFilters = async () => {
       try {
@@ -73,8 +78,8 @@ export default function UserHome() {
           acc[supermarket.cod_super] = {
             cadena: supermarket.cadena,
             direccion: `${supermarket.direccion}, ${supermarket.ciudad}, ${supermarket.provincia}`,
-            lat: supermarket.ubicacion.latitud, // Guardar latitud
-            lng: supermarket.ubicacion.longitud, // Guardar longitud
+            lat: supermarket.ubicacion.latitud,
+            lng: supermarket.ubicacion.longitud,
           };
           return acc;
         }, {});
@@ -83,17 +88,29 @@ export default function UserHome() {
         const categoryResponse = await axios.get("http://localhost:5000/api/tipos_product");
         const categoryData = categoryResponse.data.map((category) => category.nombre);
         setCategories(categoryData);
+
+        // Verifica que el userUid esté disponible
+        console.log("userUid:", userUid);
+
+        // Obtener las preferencias del usuario solo si userUid está presente
+        if (userUid) {
+          const prefResponse = await axios.get(`http://localhost:5000/api/users/preferences/${userUid}`);
+          console.log("Preferencias del usuario:", prefResponse.data.preferences);
+          setUserPreferences(prefResponse.data.preferences); // Guardar preferencias
+        } else {
+          console.log("No se encuentra userUid.");
+        }
+
       } catch (error) {
         console.error("Error fetching filters:", error);
-        alert("No se pudieron cargar los filtros.");
       }
     };
 
     fetchFilters();
-  }, []);
+  }, [userUid]);
 
   const fetchProducts = useCallback(async () => {
-    if (!currentLocation) return; // Evitar fetch hasta que la ubicación esté disponible
+    if (!currentLocation) return;
 
     try {
       let url = "http://localhost:5000/api/productos";
@@ -149,7 +166,7 @@ export default function UserHome() {
     } catch (error) {
       console.error("Error fetching products:", error);
     }
-  }, [selectedSuper, selectedCategory, searchName, currentLocation, supermarkets]);
+  }, [selectedSuper, selectedCategory, searchName, currentLocation, supermarkets, userPreferences]);
 
   useEffect(() => {
     if (!isLoadingLocation && currentLocation) {
@@ -164,6 +181,11 @@ export default function UserHome() {
     });
   };
 
+  // Filtrar productos para la sección de preferencias
+  const filteredProductsByPreferences = products.filter((product) =>
+    userPreferences.includes(product.cod_tipo)
+  );
+
   return (
     <div className="user-home-container">
       <h1>Productos en descuento</h1>
@@ -175,23 +197,7 @@ export default function UserHome() {
         </div>
       ) : (
         <>
-          {/* Sección de productos más cercanos */}
-          <div className="nearby-products">
-            <h2>Productos más cercanos</h2>
-            <div className="product-list">
-              {nearbyProducts.map((product) => (
-                <Card
-                  key={product.id}
-                  product={product}
-                  supermarket={supermarkets[product.cod_super]?.cadena || "N/A"}
-                  address={supermarkets[product.cod_super]?.direccion || "N/A"}
-                  onFavorite={handleFavoriteToggle}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Filtros */}
+          {/* Barra de Filtros */}
           <div className="filters">
             <div>
               <label htmlFor="supermarket">Filtrar por Supermercado:</label>
@@ -234,6 +240,42 @@ export default function UserHome() {
                 value={searchName}
                 onChange={(e) => setSearchName(e.target.value)}
               />
+            </div>
+          </div>
+
+          {/* Sección de productos más cercanos */}
+          <div className="nearby-products">
+            <h2>Productos más cercanos</h2>
+            <div className="product-list">
+              {nearbyProducts.map((product) => (
+                <Card
+                  key={product.id}
+                  product={product}
+                  supermarket={supermarkets[product.cod_super]?.cadena || "N/A"}
+                  address={supermarkets[product.cod_super]?.direccion || "N/A"}
+                  onFavorite={handleFavoriteToggle}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Sección de productos según preferencias */}
+          <div className="preferred-products">
+            <h2>Productos según tus preferencias</h2>
+            <div className="product-list">
+              {filteredProductsByPreferences.length > 0 ? (
+                filteredProductsByPreferences.map((product) => (
+                  <Card
+                    key={product.id}
+                    product={product}
+                    supermarket={supermarkets[product.cod_super]?.cadena || "N/A"}
+                    address={supermarkets[product.cod_super]?.direccion || "N/A"}
+                    onFavorite={handleFavoriteToggle}
+                  />
+                ))
+              ) : (
+                <p>No hay productos que coincidan con tus preferencias.</p>
+              )}
             </div>
           </div>
 
