@@ -7,7 +7,7 @@ import "./UserHome.css";
 
 export default function UserHome() {
   const { favorites, setFavorites } = useUser(); // Gestionar favoritos desde el contexto
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([]); // Todos los productos
   const [supermarkets, setSupermarkets] = useState({});
   const [categories, setCategories] = useState([]);
   const [selectedSuper, setSelectedSuper] = useState("");
@@ -16,6 +16,8 @@ export default function UserHome() {
   const [currentLocation, setCurrentLocation] = useState(null); // Ubicación del usuario
   const [isLoadingLocation, setIsLoadingLocation] = useState(true); // Estado de carga para la ubicación
   const [showLoadingScreen, setShowLoadingScreen] = useState(true); // Controla la pantalla de carga
+  const [nearbyProducts, setNearbyProducts] = useState([]); // Productos más cercanos
+  const [productsBySupermarket, setProductsBySupermarket] = useState({}); // Productos agrupados por supermercado
   const navigate = useNavigate();
 
   // Función para obtener la distancia entre dos coordenadas
@@ -106,7 +108,7 @@ export default function UserHome() {
       const response = await axios.get(url);
       let fetchedProducts = response.data;
 
-      // Si tenemos la ubicación actual, calcular distancias
+      // Ordenar los productos por proximidad
       fetchedProducts.sort((a, b) => {
         const superA = supermarkets[a.cod_super];
         const superB = supermarkets[b.cod_super];
@@ -122,7 +124,7 @@ export default function UserHome() {
           superB.lat,
           superB.lng
         );
-        return distanceA - distanceB; // Ordenar de más cercano a más lejano
+        return distanceA - distanceB;
       });
 
       // Filtrar por nombre si hay algo escrito en searchName
@@ -132,7 +134,18 @@ export default function UserHome() {
         );
       }
 
+      // Agrupar los productos por supermercado
+      const sortedBySupermarket = fetchedProducts.reduce((acc, product) => {
+        const supermarket = supermarkets[product.cod_super]?.cadena || "Desconocido";
+        if (!acc[supermarket]) acc[supermarket] = [];
+        acc[supermarket].push(product);
+        return acc;
+      }, {});
+
+      // Setear los productos
       setProducts(fetchedProducts);
+      setNearbyProducts(fetchedProducts); // Productos más cercanos
+      setProductsBySupermarket(sortedBySupermarket); // Productos agrupados por supermercado
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -155,14 +168,29 @@ export default function UserHome() {
     <div className="user-home-container">
       <h1>Productos en descuento</h1>
 
-      {/* Mostrar pantalla de carga mientras estamos esperando la ubicación */}
       {showLoadingScreen ? (
-          <div className="loading-screen">
-            <div className="loading-spinner"></div>
-            <p>Cargando ubicación...</p>
+        <div className="loading-screen">
+          <div className="loading-spinner"></div>
+          <p>Cargando ubicación...</p>
         </div>
       ) : (
         <>
+          {/* Sección de productos más cercanos */}
+          <div className="nearby-products">
+            <h2>Productos más cercanos</h2>
+            <div className="product-list">
+              {nearbyProducts.map((product) => (
+                <Card
+                  key={product.id}
+                  product={product}
+                  supermarket={supermarkets[product.cod_super]?.cadena || "N/A"}
+                  address={supermarkets[product.cod_super]?.direccion || "N/A"}
+                  onFavorite={handleFavoriteToggle}
+                />
+              ))}
+            </div>
+          </div>
+
           {/* Filtros */}
           <div className="filters">
             <div>
@@ -209,22 +237,26 @@ export default function UserHome() {
             </div>
           </div>
 
-          {/* Lista de productos */}
-          <div className="product-list">
-            {products.map((product) => (
-              <Card
-                key={product.id}
-                product={product}
-                supermarket={supermarkets[product.cod_super]?.cadena || "N/A"}
-                address={supermarkets[product.cod_super]?.direccion || "N/A"}
-                onFavorite={handleFavoriteToggle}
-              />
+          {/* Sección de productos por supermercado */}
+          <div className="products-by-supermarket">
+            <h2>Productos por Supermercado</h2>
+            {Object.entries(productsBySupermarket).map(([supermarket, products]) => (
+              <div key={supermarket}>
+                <h3>{supermarket}</h3>
+                <div className="product-list">
+                  {products.map((product) => (
+                    <Card
+                      key={product.id}
+                      product={product}
+                      supermarket={supermarkets[product.cod_super]?.cadena || "N/A"}
+                      address={supermarkets[product.cod_super]?.direccion || "N/A"}
+                      onFavorite={handleFavoriteToggle}
+                    />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
-
-          <button className="map-button" onClick={() => navigate("/map-screen")}>
-            Ver en el Mapa
-          </button>
         </>
       )}
     </div>
