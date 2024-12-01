@@ -53,3 +53,4 @@ const CardSuper = ({ product, onEdit, onDelete }) => {
 };
 
 export default CardSuper;
+

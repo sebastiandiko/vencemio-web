@@ -7,6 +7,7 @@ export default function ProductEditForm() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [tiposProducto, setTiposProducto] = useState([]);
+  const [fechaAviso, setFechaAviso] = useState(0); // Nuevo estado para la fecha de aviso (en días)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,6 +22,13 @@ export default function ProductEditForm() {
         }
 
         setProduct(fetchedProduct);
+
+        // Si ya tiene fecha de aviso, actualizar el estado de 'fechaAviso'
+        if (fetchedProduct.fecha_avisado) {
+          const avisoFecha = new Date(fetchedProduct.fecha_avisado);
+          const diffInTime = avisoFecha.getTime() - new Date(fetchedProduct.fecha_vencimiento).getTime();
+          setFechaAviso(diffInTime / (1000 * 3600 * 24)); // Calcular la diferencia en días
+        }
       } catch (error) {
         console.error("Error al obtener el producto:", error);
         alert("No se pudo cargar el producto.");
@@ -46,12 +54,22 @@ export default function ProductEditForm() {
     setProduct({ ...product, [name]: value });
   };
 
+  const handleFechaAvisoChange = (e) => {
+    const value = e.target.value;
+    setFechaAviso(value); // Actualizar el estado con el número de días de anticipación
+  };
+
   const handleUpdateProduct = async (e) => {
     e.preventDefault();
 
+    // Calcular la nueva fecha de aviso a partir de la fecha de vencimiento y los días de anticipación
+    const fechaVencimiento = new Date(product.fecha_vencimiento);
+    fechaVencimiento.setDate(fechaVencimiento.getDate() - fechaAviso); // Restar los días
+
     const updatedProduct = {
       ...product,
-      fecha_vencimiento: product.fecha_vencimiento, // No transformar a ISO
+      fecha_avisado: fechaVencimiento.toISOString(), // Establecer la fecha de aviso calculada
+      fecha_aviso_vencimiento: fechaAviso // Enviar el número de días de anticipación al backend
     };
 
     try {
@@ -135,6 +153,14 @@ export default function ProductEditForm() {
             name="fecha_vencimiento"
             value={product.fecha_vencimiento || ""}
             onChange={handleChange}
+            required
+          />
+          <label>Tiempo de Aviso (días antes del vencimiento):</label>
+          <input
+            type="number"
+            name="fecha_aviso_vencimiento"
+            value={fechaAviso || ""}
+            onChange={handleFechaAvisoChange}
             required
           />
           <input

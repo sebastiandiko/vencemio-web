@@ -92,3 +92,26 @@ h1 {
   background-color: #ff5252;
   color: white;
 }
+.expiring-alert {
+  background-color: #FFF3CD;
+  border: 2px solid #FFD200; /* Amarillo brillante */
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.expiring-product-list .card {
+  border: 2px solid #FF5733; /* Borde de alerta en rojo */
+  background-color: #FFEBCC; /* Fondo naranja pálido */
+}
+
+.expiring-product-list .card .card-title {
+  color: #D85F5F; /* Texto de título rojo para resaltar */
+}
+
+.expiring-product-list .card .card-expiration {
+  font-size: 14px;
+  color: #D85F5F; /* Color rojo para fechas de vencimiento */
+}
