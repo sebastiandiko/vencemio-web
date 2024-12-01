@@ -14,6 +14,7 @@ export default function ProductForm() {
   const [stock, setStock] = useState("");
   const [idTipo, setIdTipo] = useState("");
   const [fechaVencimiento, setFechaVencimiento] = useState("");
+  const [fechaAvisoVencimiento, setFechaAvisoVencimiento] = useState(""); // Campo para la fecha de aviso
   const [imagenURL, setImagenURL] = useState("");
   const [estado, setEstado] = useState(true);
   const [tiposProducto, setTiposProducto] = useState([]);
@@ -61,6 +62,7 @@ export default function ProductForm() {
       cod_super: superuser.cod_super,
       estado,
       fecha_vencimiento: new Date(fechaVencimiento).toISOString(),
+      fecha_aviso_vencimiento: parseInt(fechaAvisoVencimiento), // Guardamos el número de días para la alerta
       imagen: imagenURL,
     };
 
@@ -137,6 +139,16 @@ export default function ProductForm() {
             type="date"
             value={fechaVencimiento}
             onChange={(e) => setFechaVencimiento(e.target.value)}
+            required
+          />
+          {/* Nuevo campo de fecha_aviso_vencimiento */}
+          <label>¿Con cuántos días de anticipación desea recibir la alerta?</label>
+          <input
+            type="number"
+            placeholder="Días de anticipación"
+            value={fechaAvisoVencimiento}
+            onChange={(e) => setFechaAvisoVencimiento(e.target.value)}
+            min="1"
             required
           />
           <input

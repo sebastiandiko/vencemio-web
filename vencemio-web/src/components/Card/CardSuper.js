@@ -11,6 +11,9 @@ const CardSuper = ({ product, onEdit, onDelete }) => {
     imagen,
   } = product;
 
+  // Calcular el contador de días hasta el vencimiento
+  const remainingDays = Math.floor((new Date(fecha_vencimiento) - new Date()) / (1000 * 60 * 60 * 24));
+
   return (
     <div className="card">
       {/* Badge de descuento */}
@@ -29,22 +32,19 @@ const CardSuper = ({ product, onEdit, onDelete }) => {
         <p className="card-original-price">${precio}</p>
         <p className="card-discounted-price">${precio_descuento}</p>
       </div>
-      {/* Fecha de vencimiento */}
-      <p className="card-expiration">
-        vto - {new Date(fecha_vencimiento).toLocaleDateString()}
+      {/* Fecha de vencimiento con Tooltip */}
+      <p
+        className="card-expiration"
+        title={`Fecha de vencimiento: ${new Date(fecha_vencimiento).toLocaleDateString()}`}
+      >
+        vto - {new Date(fecha_vencimiento).toLocaleDateString()} ({remainingDays} días restantes)
       </p>
       {/* Acciones: Editar y Eliminar */}
       <div className="card-actions">
-        <button
-          className="edit-button"
-          onClick={onEdit}
-        >
+        <button className="edit-button" onClick={onEdit}>
           Editar
         </button>
-        <button
-          className="delete-button"
-          onClick={onDelete}
-        >
+        <button className="delete-button" onClick={onDelete}>
           Eliminar
         </button>
       </div>
