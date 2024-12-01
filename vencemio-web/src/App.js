@@ -13,6 +13,7 @@ import UserHome from "./pages/userPages/UserHome";
 import PrincipalPageComercio from "./pages/PrincipalPageComercio";
 import PrincipalPageComprador from "./pages/PrincipalPageComprador";
 import FavoritesPage from "./pages/userPages/FavoritesPage"; // Importa el componente de favoritos
+import NotificationManager from "./pages/supermarketPages/NotificationManager";
 import { UserProvider } from "./context/UserContext";
 
 function App() {
@@ -36,7 +37,8 @@ function App() {
           <Route path="/user-home" element={<UserHome />} />
           <Route path="/principal-comercio" element={<PrincipalPageComercio />} />
           <Route path="/principal-comprador" element={<PrincipalPageComprador />} />
-          <Route path="/favorites" element={<FavoritesPage />} />      
+          <Route path="/favorites" element={<FavoritesPage />} />   
+          <Route path="/notification-manager" element={<NotificationManager />} />   
         </Routes>
       </UserProvider>
     </Router>
