@@ -6,7 +6,8 @@ import { useUser } from "../../context/UserContext";
 import "./UserHome.css";
 
 export default function UserHome() {
-  const { user, favorites, setFavorites } = useUser(); // Obtener el user desde el contexto
+  const { user } = useUser(); // Obtener el usuario desde el contexto
+  const [favorites, setFavorites] = useState([]); // Para almacenar los favoritos del usuario
   const [products, setProducts] = useState([]); // Todos los productos
   const [supermarkets, setSupermarkets] = useState({});
   const [categories, setCategories] = useState([]);
@@ -21,8 +22,52 @@ export default function UserHome() {
   const [userPreferences, setUserPreferences] = useState([]); // Preferencias del usuario
   const navigate = useNavigate();
 
-  const userId = user?.id; // Obtener el `userId` desde el contexto de usuario
   const userUid = user?.uid; // Obtener el `uid` desde el contexto de usuario
+
+  // Función para obtener los favoritos del usuario
+  const fetchFavorites = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/favorites/${user.uid}`);
+      setFavorites(response.data); // Actualiza el estado de los favoritos con la respuesta de la API
+    } catch (error) {
+      console.error("Error al obtener favoritos:", error);
+    }
+  };
+
+  // Función para agregar/eliminar productos a favoritos
+  const handleFavoriteToggle = async (product, isFavorite) => {
+    if (!user || !user.uid) {
+      console.error("Error: El usuario no está definido.");
+      return;
+    }
+  
+    if (!product || !product.id) {
+      console.error("Error: El producto no tiene un ID válido.");
+      return;
+    }
+  
+    try {
+      if (isFavorite) {
+        // Agregar el producto a favoritos
+        await axios.post("http://localhost:5000/api/favorites/add", {
+          userUid: user.uid,  // Asegúrate de enviar el UID correcto del usuario
+          productId: product.id,  // El ID del producto
+        });
+        setFavorites((prev) => [...prev, product]);  // Actualiza los favoritos en el frontend
+      } else {
+        // Eliminar el producto de favoritos
+        await axios.post("http://localhost:5000/api/favorites/remove", {
+          userUid: user.uid,  // Asegúrate de enviar el UID correcto del usuario
+          productId: product.id,  // El ID del producto
+        });
+        setFavorites((prev) => prev.filter((fav) => fav.id !== product.id));  // Elimina el producto de favoritos en el frontend
+      }
+    } catch (error) {
+      console.error("Error al manejar favoritos:", error);
+    }
+  };
+  
+  
 
   // Función para obtener la distancia entre dos coordenadas
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -171,15 +216,9 @@ export default function UserHome() {
   useEffect(() => {
     if (!isLoadingLocation && currentLocation) {
       fetchProducts();
+      fetchFavorites(); // Cargar los favoritos del usuario
     }
   }, [isLoadingLocation, fetchProducts, currentLocation]);
-
-  const handleFavoriteToggle = (product, isFavorite) => {
-    setFavorites((prev) => {
-      if (isFavorite) return [...prev, product];
-      return prev.filter((fav) => fav.id !== product.id);
-    });
-  };
 
   // Filtrar productos para la sección de preferencias
   const filteredProductsByPreferences = products.filter((product) =>
