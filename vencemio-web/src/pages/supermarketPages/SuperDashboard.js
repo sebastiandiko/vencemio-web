@@ -107,6 +107,11 @@ export default function SuperDashboard() {
     navigate("/product-form");
   };
 
+  // Función para manejar la redirección a la gestión de notificaciones
+  const handleGoToNotifications = () => {
+    navigate("/notification-manager");
+  };
+
   const handleLogout = () => {
     logout();
     navigate("/login-super");
@@ -141,7 +146,12 @@ export default function SuperDashboard() {
       <button onClick={handleAddProduct} className="add-product-button">
         Agregar Producto
       </button>
-
+      {/* Botón para gestionar las notificaciones */}
+      <div className="actions">
+        <button onClick={handleGoToNotifications} className="notification-button">
+          Notificaciones
+        </button>
+      </div>
       {/* Mostrar alerta para productos con vencimiento cercano */}
       {expiringProducts.length > 0 && (
         <div className="expiring-alert">
@@ -175,7 +185,6 @@ export default function SuperDashboard() {
           <p>No hay productos disponibles.</p>
         )}
       </div>
-
       <button onClick={handleLogout} className="logout-button">
         Cerrar Sesión
       </button>
