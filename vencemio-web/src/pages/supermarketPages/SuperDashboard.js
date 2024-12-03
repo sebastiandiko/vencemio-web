@@ -12,7 +12,6 @@ export default function SuperDashboard() {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(true);
-  const [expiringProducts, setExpiringProducts] = useState([]); // Productos que están cerca del vencimiento
   const navigate = useNavigate();
 
   // Verificar autenticación
@@ -31,7 +30,6 @@ export default function SuperDashboard() {
       );
       setProducts(response.data);
       setFilteredProducts(response.data);
-      checkExpiringProducts(response.data); // Comprobar productos con vencimiento cercano
     } catch (error) {
       console.error("Error al obtener productos:", error);
     } finally {
@@ -76,21 +74,20 @@ export default function SuperDashboard() {
     navigate("/product-form");
   };
 
-  // Función para manejar la eliminación del producto
+  const handleGoToNotifications = () => {
+    navigate("/notification-manager");
+  };
+
   const handleDeleteProduct = async (id) => {
     try {
-      // Hacer la solicitud DELETE al backend
       await axios.delete(`http://localhost:5000/api/productos/${id}`);
-  
-      // Eliminar el producto de la lista local (optimistic update)
+      alert("Producto eliminado exitosamente.");
       setProducts((prevProducts) =>
         prevProducts.filter((product) => product.id !== id)
       );
       setFilteredProducts((prevFiltered) =>
         prevFiltered.filter((product) => product.id !== id)
       );
-  
-      alert("Producto eliminado exitosamente.");
     } catch (error) {
       console.error("Error al eliminar producto:", error);
       alert("Hubo un problema al eliminar el producto.");
@@ -100,16 +97,6 @@ export default function SuperDashboard() {
   const handleLogout = () => {
     logout();
     navigate("/login-super");
-  };
-
-  // Función para calcular productos cercanos al vencimiento
-  const checkExpiringProducts = (products) => {
-    const currentDate = new Date();
-    const expiringSoon = products.filter((product) => {
-      const avisoDate = new Date(product.fecha_avisado);
-      return avisoDate <= currentDate; // Productos cuya fecha de aviso es hoy o en el pasado
-    });
-    setExpiringProducts(expiringSoon);
   };
 
   if (loading) {
@@ -138,27 +125,14 @@ export default function SuperDashboard() {
         </select>
       </div>
 
-      <button onClick={handleAddProduct} className="add-product-button">
-        Agregar Producto
-      </button>
-
-      {/* Mostrar alerta para productos con vencimiento cercano */}
-      {expiringProducts.length > 0 && (
-        <div className="expiring-alert">
-          <h2>¡Alerta de Vencimiento!</h2>
-          <p>{expiringProducts.length} productos están próximos a vencer. ¡Revísalos!</p>
-          <div className="expiring-product-list">
-            {expiringProducts.map((product) => (
-              <CardSuper
-                key={product.id}
-                product={product}
-                onEdit={() => navigate(`/edit-product/${product.id}`)}
-                onDelete={() => handleDeleteProduct(product.id)} // Llamamos a handleDeleteProduct para eliminar
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      <div className="actions">
+        <button onClick={handleAddProduct} className="add-product-button">
+          Agregar Producto
+        </button>
+        <button onClick={handleGoToNotifications} className="notification-button">
+          Notificaciones
+        </button>
+      </div>
 
       {/* Lista de productos */}
       <div className="product-list">
@@ -168,7 +142,7 @@ export default function SuperDashboard() {
               key={product.id}
               product={product}
               onEdit={() => navigate(`/edit-product/${product.id}`)}
-              onDelete={() => handleDeleteProduct(product.id)} // Llamamos a handleDeleteProduct para eliminar
+              onDelete={() => handleDeleteProduct(product.id)}
             />
           ))
         ) : (

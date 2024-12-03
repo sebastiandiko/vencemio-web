@@ -74,3 +74,8 @@
 .notification-manager-button:hover {
   background-color: #fcc40b;
 }
+
+.view-notifications-button:hover {
+  background-color: #e4b100; /* Amarillo más oscuro */
+}
+

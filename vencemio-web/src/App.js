@@ -14,6 +14,7 @@ import PrincipalPageComercio from "./pages/PrincipalPageComercio";
 import PrincipalPageComprador from "./pages/PrincipalPageComprador";
 import FavoritesPage from "./pages/userPages/FavoritesPage"; // Importa el componente de favoritos
 import NotificationManager from "./pages/supermarketPages/NotificationManager";
+import NotificationHistory from "./pages/supermarketPages/NotificationHistory";
 import { UserProvider } from "./context/UserContext";
 
 function App() {
@@ -38,7 +39,8 @@ function App() {
           <Route path="/principal-comercio" element={<PrincipalPageComercio />} />
           <Route path="/principal-comprador" element={<PrincipalPageComprador />} />
           <Route path="/favorites" element={<FavoritesPage />} />   
-          <Route path="/notification-manager" element={<NotificationManager />} />   
+          <Route path="/notification-manager" element={<NotificationManager />} /> 
+          <Route path="/notification-history" element={<NotificationHistory />} />  
         </Routes>
       </UserProvider>
     </Router>
