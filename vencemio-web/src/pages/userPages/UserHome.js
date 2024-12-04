@@ -285,6 +285,26 @@ export default function UserHome() {
             </div>
           </div>
 
+          <div className="favorites-section">
+            <h2>Mis Favoritos</h2>
+            <div className="product-list">
+              {favorites.length > 0 ? (
+                favorites.map((favorite) => (
+                  <Card
+                    key={favorite.id}
+                    product={favorite}  // Usamos el producto completo
+                    supermarket={supermarkets[favorite.cod_super]?.cadena || "N/A"}
+                    address={supermarkets[favorite.cod_super]?.direccion || "N/A"}
+                    onFavorite={handleFavoriteToggle}
+                    initialFavoriteState={true} // Siempre favorito
+                  />
+                ))
+              ) : (
+                <p>No tienes productos en tus favoritos.</p>
+              )}
+            </div>
+          </div>
+
           {/* Sección de productos más cercanos */}
           <div className="nearby-products">
             <h2>Productos más cercanos</h2>
