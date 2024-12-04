@@ -24,51 +24,7 @@ export default function UserHome() {
 
   const userUid = user?.uid; // Obtener el `uid` desde el contexto de usuario
 
-  // Función para obtener los favoritos del usuario
-  const fetchFavorites = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/api/favorites/${user.uid}`);
-      setFavorites(response.data); // Actualiza el estado de los favoritos con la respuesta de la API
-    } catch (error) {
-      console.error("Error al obtener favoritos:", error);
-    }
-  };
-
-  // Función para agregar/eliminar productos a favoritos
-  const handleFavoriteToggle = async (product, isFavorite) => {
-    if (!user || !user.uid) {
-      console.error("Error: El usuario no está definido.");
-      return;
-    }
-  
-    if (!product || !product.id) {
-      console.error("Error: El producto no tiene un ID válido.");
-      return;
-    }
-  
-    try {
-      if (isFavorite) {
-        // Agregar el producto a favoritos
-        await axios.post("http://localhost:5000/api/favorites/add", {
-          userUid: user.uid,  // Asegúrate de enviar el UID correcto del usuario
-          productId: product.id,  // El ID del producto
-        });
-        setFavorites((prev) => [...prev, product]);  // Actualiza los favoritos en el frontend
-      } else {
-        // Eliminar el producto de favoritos
-        await axios.post("http://localhost:5000/api/favorites/remove", {
-          userUid: user.uid,  // Asegúrate de enviar el UID correcto del usuario
-          productId: product.id,  // El ID del producto
-        });
-        setFavorites((prev) => prev.filter((fav) => fav.id !== product.id));  // Elimina el producto de favoritos en el frontend
-      }
-    } catch (error) {
-      console.error("Error al manejar favoritos:", error);
-    }
-  };
-  
-  
-
+ 
   // Función para obtener la distancia entre dos coordenadas
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const toRad = (value) => (value * Math.PI) / 180;
@@ -216,7 +172,6 @@ export default function UserHome() {
   useEffect(() => {
     if (!isLoadingLocation && currentLocation) {
       fetchProducts();
-      fetchFavorites(); // Cargar los favoritos del usuario
     }
   }, [isLoadingLocation, fetchProducts, currentLocation]);
 
@@ -224,6 +179,54 @@ export default function UserHome() {
   const filteredProductsByPreferences = products.filter((product) =>
     userPreferences.includes(product.cod_tipo)
   );
+
+  const fetchFavorites = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/favorites/${userUid}`);
+      console.log("Favoritos recibidos:", response.data); // Ver los favoritos que recibimos
+      setFavorites(response.data);  // Actualiza el estado de favoritos
+    } catch (error) {
+      console.error("Error al obtener los favoritos:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (userUid) {
+      fetchFavorites();  // Llamar a la función solo cuando `userUid` esté disponible
+    }
+  }, [userUid]);  // El useEffect se dispara cuando el `userUid` cambia
+  
+  const handleFavoriteToggle = async (product, isFavorite) => {
+    if (!user || !user.uid) {
+      console.error("Error: El usuario no está definido.");
+      return;
+    }
+  
+    if (!product || !product.id) {
+      console.error("Error: El producto no tiene un ID válido.");
+      return;
+    }
+  
+    try {
+      if (isFavorite) {
+        // Agregar a favoritos
+        await axios.post("http://localhost:5000/api/favorites/add", {
+          userUid: user.uid,  // Usamos el UID del usuario
+          productId: product.id,  // El ID del producto
+        });
+        setFavorites((prev) => [...prev, product]); // Actualiza el estado local de favoritos
+      } else {
+        // Eliminar de favoritos
+        await axios.post("http://localhost:5000/api/favorites/remove", {
+          userUid: user.uid,
+          productId: product.id,
+        });
+        setFavorites((prev) => prev.filter((fav) => fav.id !== product.id)); // Elimina del estado local de favoritos
+      }
+    } catch (error) {
+      console.error("Error al manejar favoritos:", error);
+    }
+  };
 
   return (
     <div className="user-home-container">
@@ -293,6 +296,7 @@ export default function UserHome() {
                   supermarket={supermarkets[product.cod_super]?.cadena || "N/A"}
                   address={supermarkets[product.cod_super]?.direccion || "N/A"}
                   onFavorite={handleFavoriteToggle}
+                  initialFavoriteState={favorites.some(fav => fav.id === product.id)} // Mostrar el estado de favorito
                 />
               ))}
             </div>
@@ -310,7 +314,8 @@ export default function UserHome() {
                     supermarket={supermarkets[product.cod_super]?.cadena || "N/A"}
                     address={supermarkets[product.cod_super]?.direccion || "N/A"}
                     onFavorite={handleFavoriteToggle}
-                  />
+                    initialFavoriteState={favorites.some(fav => fav.id === product.id)} // Mostrar el estado de favorito
+                    />
                 ))
               ) : (
                 <p>No hay productos que coincidan con tus preferencias.</p>
@@ -332,7 +337,8 @@ export default function UserHome() {
                       supermarket={supermarkets[product.cod_super]?.cadena || "N/A"}
                       address={supermarkets[product.cod_super]?.direccion || "N/A"}
                       onFavorite={handleFavoriteToggle}
-                    />
+                      initialFavoriteState={favorites.some(fav => fav.id === product.id)} // Mostrar el estado de favorito
+                      />
                   ))}
                 </div>
               </div>

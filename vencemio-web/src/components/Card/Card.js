@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Card.css";
 
-const Card = ({ product, supermarket, address, onClick, onFavorite }) => {
+const Card = ({ product, supermarket, address, onClick, onFavorite, initialFavoriteState }) => {
   const {
     nombre,
     precio,
@@ -9,23 +9,34 @@ const Card = ({ product, supermarket, address, onClick, onFavorite }) => {
     porcentaje_descuento,
     fecha_vencimiento,
     imagen,
+    id,
   } = product;
 
-  const [isFavorite, setIsFavorite] = useState(false);
+  // Estado local de isFavorite, puede ser inicializado desde una prop `initialFavoriteState`
+  const [isFavorite, setIsFavorite] = useState(initialFavoriteState);
 
+  // Cuando el estado de favorito cambia, notificamos al padre
   const handleFavoriteClick = () => {
-    setIsFavorite(!isFavorite); // Update local state
-    if (onFavorite) onFavorite(product, !isFavorite); // Notify parent
+    const newFavoriteState = !isFavorite; // Alternamos el estado
+    setIsFavorite(newFavoriteState); // Actualizamos el estado local
+
+    // Enviamos el nuevo estado al componente padre
+    if (onFavorite) {
+      onFavorite(product, newFavoriteState); // Notify parent
+    }
   };
+
+  // Aquí puedes hacer una consulta a la API para obtener si este producto ya está marcado como favorito
+  useEffect(() => {
+    // Este `useEffect` puede usar un flag `initialFavoriteState` que se pasará desde el componente padre
+    // Esto se ejecutará solo una vez cuando el componente se monte
+    // Asegúrate de que `initialFavoriteState` sea enviado correctamente
+  }, [initialFavoriteState]);
 
   return (
     <div className="card">
       <div className="card-discount-badge">{Math.round(porcentaje_descuento)}% OFF</div>
-      <img
-        src={imagen || "/default-image.jpg"}
-        alt={nombre}
-        className="card-image"
-      />
+      <img src={imagen || "/default-image.jpg"} alt={nombre} className="card-image" />
       <h3 className="card-title">{nombre}</h3>
       <p className="card-address">
         📍 {supermarket} - {address}
