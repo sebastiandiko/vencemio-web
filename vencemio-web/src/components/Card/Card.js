@@ -9,6 +9,7 @@ const Card = ({ product, supermarket, address, onClick, onFavorite, initialFavor
     porcentaje_descuento,
     fecha_vencimiento,
     imagen,
+    stock,
     id,
   } = product;
 
@@ -26,12 +27,12 @@ const Card = ({ product, supermarket, address, onClick, onFavorite, initialFavor
     }
   };
 
-  // Aquí puedes hacer una consulta a la API para obtener si este producto ya está marcado como favorito
-  useEffect(() => {
-    // Este `useEffect` puede usar un flag `initialFavoriteState` que se pasará desde el componente padre
-    // Esto se ejecutará solo una vez cuando el componente se monte
-    // Asegúrate de que `initialFavoriteState` sea enviado correctamente
-  }, [initialFavoriteState]);
+  // Redondear los precios a 2 decimales
+  const formattedPrecio = precio ? parseFloat(precio).toFixed(2) : "0.00";
+  const formattedPrecioDescuento = precio_descuento ? parseFloat(precio_descuento).toFixed(2) : "0.00";
+
+  // Formateo del stock
+  const formattedStock = stock ? `Stock: ${stock}` : "Sin stock disponible";
 
   return (
     <div className="card">
@@ -42,12 +43,15 @@ const Card = ({ product, supermarket, address, onClick, onFavorite, initialFavor
         📍 {supermarket} - {address}
       </p>
       <div className="card-prices">
-        <p className="card-original-price">${precio}</p>
-        <p className="card-discounted-price">${precio_descuento}</p>
+        <p className="card-original-price">${formattedPrecio}</p>
+        <p className="card-discounted-price">${formattedPrecioDescuento}</p>
       </div>
       <p className="card-expiration">
         vto - {new Date(fecha_vencimiento).toLocaleDateString()}
       </p>
+      {/* Muestra el stock disponible */}
+      <p className="card-stock">{formattedStock}</p>
+
       <div className="card-actions">
         <button
           className={`favorite-button ${isFavorite ? "favorited" : ""}`}

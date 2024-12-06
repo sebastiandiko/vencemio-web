@@ -305,23 +305,6 @@ export default function UserHome() {
             </div>
           </div>
 
-          {/* Sección de productos más cercanos */}
-          <div className="nearby-products">
-            <h2>Productos más cercanos</h2>
-            <div className="product-list">
-              {nearbyProducts.map((product) => (
-                <Card
-                  key={product.id}
-                  product={product}
-                  supermarket={supermarkets[product.cod_super]?.cadena || "N/A"}
-                  address={supermarkets[product.cod_super]?.direccion || "N/A"}
-                  onFavorite={handleFavoriteToggle}
-                  initialFavoriteState={favorites.some(fav => fav.id === product.id)} // Mostrar el estado de favorito
-                />
-              ))}
-            </div>
-          </div>
-
           {/* Sección de productos según preferencias */}
           <div className="preferred-products">
             <h2>Productos según tus preferencias</h2>
@@ -340,6 +323,23 @@ export default function UserHome() {
               ) : (
                 <p>No hay productos que coincidan con tus preferencias.</p>
               )}
+            </div>
+          </div>
+          
+          {/* Sección de productos más cercanos */}
+          <div className="nearby-products">
+            <h2>Productos más cercanos</h2>
+            <div className="product-list">
+              {nearbyProducts.map((product) => (
+                <Card
+                  key={product.id}
+                  product={product}
+                  supermarket={supermarkets[product.cod_super]?.cadena || "N/A"}
+                  address={supermarkets[product.cod_super]?.direccion || "N/A"}
+                  onFavorite={handleFavoriteToggle}
+                  initialFavoriteState={favorites.some(fav => fav.id === product.id)} // Mostrar el estado de favorito
+                />
+              ))}
             </div>
           </div>
 
