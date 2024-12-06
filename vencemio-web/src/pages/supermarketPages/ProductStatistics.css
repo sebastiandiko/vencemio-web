@@ -1,0 +1,54 @@
+/* Contenedor principal */
+.statistics-container {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Título principal */
+  .statistics-title {
+    font-size: 2.5rem;
+    color: #1c802d;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+  }
+  
+  /* Sección de gráficos */
+  .chart-section {
+    margin-bottom: 50px;
+  }
+  
+  /* Títulos de los gráficos */
+  .chart-title {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Contenedor de cada gráfico */
+  .chart-wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Animación al pasar el mouse */
+  .chart-wrapper:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Texto centrado */
+  .text-center {
+    text-align: center;
+  }
+  
+  /* Colores adicionales */
+  .chart-wrapper .chart {
+    color: #1c802d;
+  }
+  
