@@ -103,7 +103,6 @@
 
 /* Estilo para los botones de eliminar dentro de las tarjetas de notificación */
 .delete-button {
-  position: absolute;
   top: 15px;  /* Posicionamos el botón cerca de la parte superior */
   right: 15px; /* Lo alineamos a la derecha */
   background-color: #ff5252;  /* Color rojo */

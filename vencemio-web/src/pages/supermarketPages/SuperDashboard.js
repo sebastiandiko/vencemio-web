@@ -18,7 +18,6 @@ export default function SuperDashboard() {
   // Verificar autenticación
   useEffect(() => {
     if (!superuser) {
-      alert("Por favor, inicie sesión.");
       navigate("/login-super");
     }
   }, [superuser, navigate]);
@@ -72,20 +71,25 @@ export default function SuperDashboard() {
     }
   };
 
-  // Función para manejar la eliminación del producto
-  const handleDeleteProduct = async (id) => {
+  // Función para manejar la eliminación del producto// Función para manejar la eliminación del producto
+  const handleDeleteProduct = async (productId) => {
     try {
-      // Hacer la solicitud DELETE al backend
-      await axios.delete(`http://localhost:5000/api/productos/${id}`);
-  
-      // Eliminar el producto de la lista local (optimistic update)
+      // Realizar la solicitud DELETE al backend
+      const response = await axios.delete(`http://localhost:5000/api/productos/${productId}`);
+
+      // Filtrar el producto eliminado de las listas locales
       setProducts((prevProducts) =>
-        prevProducts.filter((product) => product.id !== id)
+        prevProducts.filter((product) => product.id !== productId)
       );
-      setFilteredProducts((prevFiltered) =>
-        prevFiltered.filter((product) => product.id !== id)
+      setFilteredProducts((prevFilteredProducts) =>
+        prevFilteredProducts.filter((product) => product.id !== productId)
       );
-  
+      
+      // También eliminar el producto de la lista de productos próximos a vencer
+      setExpiringProducts((prevExpiringProducts) =>
+        prevExpiringProducts.filter((product) => product.id !== productId)
+      );
+
       alert("Producto eliminado exitosamente.");
     } catch (error) {
       console.error("Error al eliminar producto:", error);

@@ -127,4 +127,17 @@
   .favorite-button.favorited {
     color: #ff4757; /* Rojo para los favoritos */
   }
+  .card-stock {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  
+  .in-stock {
+    color: green; /* Color verde para productos en stock */
+  }
+  
+  .out-of-stock {
+    color: red; /* Color rojo para productos agotados */
+    font-weight: bold;
+  }
   
