@@ -70,8 +70,3 @@
   align-items: center;
   gap: 10px;
 }
-.error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 5px;
-}

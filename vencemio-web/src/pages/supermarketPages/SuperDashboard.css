@@ -17,8 +17,12 @@ h1 {
 .controls {
   display: flex;
   justify-content: center;
-  gap: 20px;
   margin-bottom: 20px;
+  align-items: center;
+}
+.filter-section {
+  display: flex;
+  align-items: center;
 }
 
 .search-input {
@@ -29,9 +33,8 @@ h1 {
 }
 
 .filter-select {
+  margin-left: 10px;
   padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
 }
 
 
@@ -106,6 +109,15 @@ h1 {
   color: #D85F5F; /* Color rojo para fechas de vencimiento */
 }
 
+.action-buttons button {
+  margin-left: 10px;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
 .actions {
   display: flex;
   justify-content: center;
@@ -141,4 +153,19 @@ h1 {
 
 .notification-button:hover {
   background-color: #e4b100; /* Amarillo más oscuro al pasar el mouse */
+}
+/* CSS para el botón de Estadísticas */
+.statistics-button {
+  padding: 10px 20px;
+  background-color: #008CBA; /* Color de fondo */
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.statistics-button:hover {
+  background-color: #005f73; /* Color de fondo cuando el cursor está sobre el botón */
 }

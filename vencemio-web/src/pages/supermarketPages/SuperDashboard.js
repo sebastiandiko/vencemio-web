@@ -115,6 +115,10 @@ export default function SuperDashboard() {
   const handleGoToNotifications = () => {
     navigate("/notification-manager");
   };
+  // Función para manejar la redirección a las estadísticas
+  const handleGoToStatistics = () => {
+    navigate("/estadisticas");
+  };
 
   const handleLogout = () => {
     logout();
@@ -129,32 +133,36 @@ export default function SuperDashboard() {
     <div className="dashboard-container">
       <h1>Dashboard del Supermercado</h1>
 
-      {/* Filtro por categoría */}
-      <div className="controls">
-        <label htmlFor="categoryFilter">Filtrar por categoría:</label>
-        <select
-          id="categoryFilter"
-          className="filter-select"
-          value={selectedCategory}
-          onChange={handleFilterCategory}
-        >
-          <option value="">Todas las categorías</option>
-          {categories.map((category, index) => (
-            <option key={index} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
+     {/* Contenedor para los filtros y botones */}
+     <div className="controls">
+        <div className="filter-section">
+          <label htmlFor="categoryFilter">Filtrar por categoría:</label>
+          <select
+            id="categoryFilter"
+            value={selectedCategory}
+            onChange={handleFilterCategory}
+            className="filter-select"
+          >
+            <option value="">Todas las categorías</option>
+            {categories.map((category, index) => (
+              <option key={index} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <button onClick={handleAddProduct} className="add-product-button">
-        Agregar Producto
-      </button>
-      {/* Botón para gestionar las notificaciones */}
-      <div className="actions">
-        <button onClick={handleGoToNotifications} className="notification-button">
-          Notificaciones
-        </button>
+        <div className="action-buttons">
+          <button onClick={handleAddProduct} className="add-product-button">
+            Agregar Producto
+          </button>
+          <button onClick={handleGoToNotifications} className="notification-button">
+            Notificaciones
+          </button>
+          <button onClick={handleGoToStatistics} className="statistics-button">
+            Estadísticas
+          </button>
+        </div>
       </div>
       {/* Mostrar alerta para productos con vencimiento cercano */}
       {expiringProducts.length > 0 && (

@@ -155,15 +155,15 @@ export default function ProductForm() {
           />
           <input
             type="number"
-            placeholder="Precio Descuento"
-            value={precioDescuento}
-            onChange={(e) => handlePrecioDescuentoChange(e.target.value)}
-          />
-          <input
-            type="number"
             placeholder="Porcentaje Descuento"
             value={porcentajeDescuento}
             onChange={(e) => handlePorcentajeChange(e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Precio Descuento"
+            value={precioDescuento}
+            onChange={(e) => handlePrecioDescuentoChange(e.target.value)}
           />
           <input
             type="number"

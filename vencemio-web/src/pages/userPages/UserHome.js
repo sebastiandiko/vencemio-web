@@ -228,6 +228,10 @@ export default function UserHome() {
     }
   };
 
+  const handleGoToMap = () => {
+    navigate("/map-screen");
+  };
+
   return (
     <div className="user-home-container">
       <h1>Productos en descuento</h1>
@@ -283,6 +287,9 @@ export default function UserHome() {
                 onChange={(e) => setSearchName(e.target.value)}
               />
             </div>
+            <button onClick={handleGoToMap} className="mapa-button">
+              Ver mapa
+            </button>
           </div>
 
           <div className="favorites-section">

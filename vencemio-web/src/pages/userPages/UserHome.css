@@ -238,3 +238,17 @@ h1 {
   font-size: 16px;
   color: #fff;
 }
+.mapa-button{
+  padding: 10px 20px;
+  background-color: #1c802d; /* Color de fondo */
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.mapa-button:hover {
+  background-color: #005f73; /* Color de fondo cuando el cursor está sobre el botón */
+}
