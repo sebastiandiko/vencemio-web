@@ -18,6 +18,13 @@ export default function ProductForm() {
   const [imagenURL, setImagenURL] = useState("");
   const [estado, setEstado] = useState(true);
   const [tiposProducto, setTiposProducto] = useState([]);
+  const [tipoStats, setTipoStats] = useState({
+    nombre: "",
+    promedioPrecio: 0,
+    promedioDescuento: 0,
+    cantidadProductos: 0,
+    aviso_dias: 0
+  });
   const [codigoBarraError, setCodigoBarraError] = useState(""); // Para almacenar el error de código de barras
   const [codigoBarraExistente, setCodigoBarraExistente] = useState(false); // Nuevo estado para saber si el código de barras ya existe
   const navigate = useNavigate();
@@ -35,7 +42,49 @@ export default function ProductForm() {
     fetchTiposProducto();
   }, []);
 
-
+  useEffect(() => {
+    const fetchTipoStats = async () => {
+      if (idTipo && superuser && tiposProducto.length > 0) {
+        try {
+          // Llamar a la API para obtener productos filtrados por supermercado y tipo de producto
+          const response = await axios.get(
+            `http://localhost:5000/api/productos/filter/${superuser.cod_super}/${idTipo}`
+          );
+  
+          const productos = response.data;
+  
+          // Buscar el tipo de producto por cod_tipo
+          const tipo = tiposProducto.find((tipo) => tipo.cod_tipo === idTipo);
+          const nombre = tipo ? tipo.nombre : '';
+  
+          // Calcular estadísticas
+          const precios = productos.map((prod) => prod.precio_descuento);
+          const descuentos = productos.map((prod) => prod.porcentaje_descuento);
+          const dias_aviso = productos.map((prod) => prod.fecha_aviso_vencimiento);
+  
+          const promedioPrecio =
+            precios.reduce((acc, price) => acc + price, 0) / precios.length || 0;
+          const promedioDescuento =
+            descuentos.reduce((acc, discount) => acc + discount, 0) / descuentos.length || 0;
+          const promedioDiasAviso =
+            dias_aviso.reduce((acc, dias) => acc + dias, 0) / dias_aviso.length || 0;
+  
+          setTipoStats({
+            nombre,
+            promedioPrecio,
+            promedioDescuento,
+            promedioDiasAviso,
+            cantidadProductos: productos.length,
+          });
+        } catch (error) {
+          console.error("Error al obtener estadísticas del tipo:", error);
+        }
+      }
+    };
+  
+    fetchTipoStats();
+  }, [idTipo, superuser, tiposProducto]); // Asegúrate de incluir tiposProducto como dependencia
+  
   const handlePrecioDescuentoChange = (value) => {
     setPrecioDescuento(value);
     if (precio) {
@@ -125,102 +174,110 @@ export default function ProductForm() {
 
   return (
     <div className="productForm-page">
+      <h1 className="product-form-title">Agregar Producto</h1>
       <div className="product-form-container">
-        <h1 className="product-form-title">Agregar Producto</h1>
-        <form className="product-form" onSubmit={handleAddProduct}>
-          <input
-            type="text"
-            placeholder="Nombre"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Código de Barra"
-            value={codigoBarra}
-            onChange={handleCodigoBarraChange}
-            onBlur={() => validateCodigoBarra(codigoBarra)}
-            required
-          />
-          {/* Mostrar el error si el código de barra no es válido o ya existe */}
-          {codigoBarraError && <p className="error-message">{codigoBarraError}</p>}
-
-          <input
-            type="number"
-            placeholder="Precio"
-            value={precio}
-            onChange={(e) => setPrecio(e.target.value)}
-            required
-          />
-          <input
-            type="number"
-            placeholder="Porcentaje Descuento"
-            value={porcentajeDescuento}
-            onChange={(e) => handlePorcentajeChange(e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Precio Descuento"
-            value={precioDescuento}
-            onChange={(e) => handlePrecioDescuentoChange(e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Stock"
-            value={stock}
-            onChange={(e) => setStock(e.target.value)}
-            required
-          />
-          <label>Tipo de Producto:</label>
-          <select
-            value={idTipo}
-            onChange={(e) => setIdTipo(e.target.value)}
-            required
-          >
-            <option value="">Seleccione un tipo</option>
-            {tiposProducto.map((tipo) => (
-              <option key={tipo.id} value={tipo.nombre}>
-                {tipo.nombre}
-              </option>
-            ))}
-          </select>
-          <label>Fecha de Vencimiento:</label>
-          <input
-            type="date"
-            value={fechaVencimiento}
-            onChange={(e) => setFechaVencimiento(e.target.value)}
-            required
-          />
-          {/* Nuevo campo de fecha_aviso_vencimiento */}
-          <label>¿Con cuántos días de anticipación desea recibir la alerta?</label>
-          <input
-            type="number"
-            placeholder="Días de anticipación"
-            value={fechaAvisoVencimiento}
-            onChange={(e) => setFechaAvisoVencimiento(e.target.value)}
-            min="1"
-            required
-          />
-          <input
-            type="text"
-            placeholder="URL de la Imagen"
-            value={imagenURL}
-            onChange={(e) => setImagenURL(e.target.value)}
-          />
-          <div className="product-form-switch">
-            <label>Estado:</label>
+        <div className="product-form">
+          <form className="product-form" onSubmit={handleAddProduct}>
             <input
-              type="checkbox"
-              checked={estado}
-              onChange={() => setEstado(!estado)}
+              type="text"
+              placeholder="Nombre"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              required
             />
-          </div>
-          <button type="submit" className="product-form-button">
-            Agregar Producto
-          </button>
-        </form>
+            <input
+              type="text"
+              placeholder="Código de Barra"
+              value={codigoBarra}
+              onChange={handleCodigoBarraChange}
+              onBlur={() => validateCodigoBarra(codigoBarra)}
+              required
+            />
+            {codigoBarraError && <p className="error-message">{codigoBarraError}</p>}
+            <input
+              type="number"
+              placeholder="Precio"
+              value={precio}
+              onChange={(e) => setPrecio(e.target.value)}
+              required
+            />
+            <input
+              type="number"
+              placeholder="Porcentaje Descuento"
+              value={porcentajeDescuento}
+              onChange={(e) => handlePorcentajeChange(e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Precio Descuento"
+              value={precioDescuento}
+              onChange={(e) => handlePrecioDescuentoChange(e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Stock"
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
+              required
+            />
+            <label>Tipo de Producto:</label>
+            <select
+              value={idTipo}
+              onChange={(e) => setIdTipo(e.target.value)}
+              required
+            >
+              <option value="">Seleccione un tipo</option>
+              {tiposProducto.map((tipo) => (
+                <option key={tipo.id} value={tipo.nombre}>
+                  {tipo.nombre}
+                </option>
+              ))}
+            </select>
+            <label>Fecha de Vencimiento:</label>
+            <input
+              type="date"
+              value={fechaVencimiento}
+              onChange={(e) => setFechaVencimiento(e.target.value)}
+              required
+            />
+            <label>¿Con cuántos días de anticipación desea recibir la alerta?</label>
+            <input
+              type="number"
+              placeholder="Días de anticipación"
+              value={fechaAvisoVencimiento}
+              onChange={(e) => setFechaAvisoVencimiento(e.target.value)}
+              min="1"
+              required
+            />
+            <input
+              type="text"
+              placeholder="URL de la Imagen"
+              value={imagenURL}
+              onChange={(e) => setImagenURL(e.target.value)}
+            />
+            <div className="product-form-switch">
+              <label>Estado:</label>
+              <input
+                type="checkbox"
+                checked={estado}
+                onChange={() => setEstado(!estado)}
+              />
+            </div>
+            <button type="submit" className="product-form-button">
+              Agregar Producto
+            </button>
+          </form>
+        </div>
+
+        <div className="tipo-stats">
+          <h3>Estadísticas del Tipo</h3>
+          <p>Precio Promedio: ${tipoStats.promedioPrecio?.toFixed(2)}</p>
+          <p>Descuento Promedio: {tipoStats.promedioDescuento?.toFixed(2)}%</p>
+          <p>Cantidad de Productos: {tipoStats.cantidadProductos}</p>
+          <p>Días de Aviso: {tipoStats.promedioDiasAviso?.toFixed(0)}</p>
+        </div>
       </div>
     </div>
+
   );
 }

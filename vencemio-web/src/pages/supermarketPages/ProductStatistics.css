@@ -1,4 +1,17 @@
 /* Contenedor principal */
+.statistics-page {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;  /* Controlamos el ancho del contenedor */
+  background-image: 
+  linear-gradient(#FFF5CC, #fff5ccb0), /* Capa semitransparente encima */
+  url('../../../public/logoFondo.png'); /* Imagen de fondo */
+  background-repeat: repeat;
+  background-size: 5%; /* Ajusta la imagen */
+  background-position: center;
+}
+
 .statistics-container {
     width: 80%;
     margin: 0 auto;

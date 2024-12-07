@@ -156,35 +156,37 @@ const ProductStatistics = () => {
   };
 
   return (
-    <div className="statistics-container">
-      <h1 className="statistics-title">Estadísticas de Productos</h1>
+    <div className="statistics-page">
+      <div className="statistics-container">
+        <h1 className="statistics-title">Estadísticas de Productos</h1>
 
-      <div className="chart-section">
-        <h2 className="chart-title">Distribución por Tipo de Producto</h2>
-        <div className="chart-wrapper">
-          {pieData ? <Pie data={pieData} /> : <p>Cargando datos...</p>}
+        <div className="chart-section">
+          <h2 className="chart-title">Distribución por Tipo de Producto</h2>
+          <div className="chart-wrapper">
+            {pieData ? <Pie data={pieData} /> : <p>Cargando datos...</p>}
+          </div>
         </div>
-      </div>
 
-      <div className="chart-section">
-        <h2 className="chart-title">Promedio de Precios por Tipo</h2>
-        <div className="chart-wrapper">
-          {barData ? <Bar data={barData} /> : <p>Cargando datos...</p>}
+        <div className="chart-section">
+          <h2 className="chart-title">Promedio de Precios por Tipo</h2>
+          <div className="chart-wrapper">
+            {barData ? <Bar data={barData} /> : <p>Cargando datos...</p>}
+          </div>
         </div>
-      </div>
 
-      <div className="chart-section">
-        <h2 className="chart-title">Distribución de Productos por Descuento</h2>
-        <div className="chart-wrapper">
-          {discountData ? <Pie data={discountData} /> : <p>Cargando datos...</p>}
+        <div className="chart-section">
+          <h2 className="chart-title">Distribución de Productos por Descuento</h2>
+          <div className="chart-wrapper">
+            {discountData ? <Pie data={discountData} /> : <p>Cargando datos...</p>}
+          </div>
         </div>
-      </div>
 
 
-      <div className="chart-section">
-        <h2 className="chart-title">Promedio de Precios por Supermercado</h2>
-        <div className="chart-wrapper">
-          {supermarketPriceData ? <Bar data={supermarketPriceData} /> : <p>Cargando datos...</p>}
+        <div className="chart-section">
+          <h2 className="chart-title">Promedio de Precios por Supermercado</h2>
+          <div className="chart-wrapper">
+            {supermarketPriceData ? <Bar data={supermarketPriceData} /> : <p>Cargando datos...</p>}
+          </div>
         </div>
       </div>
     </div>
