@@ -16,6 +16,7 @@ import FavoritesPage from "./pages/userPages/FavoritesPage"; // Importa el compo
 import NotificationManager from "./pages/supermarketPages/NotificationManager";
 import NotificationHistory from "./pages/supermarketPages/NotificationHistory";
 import ProductStatistics from "./pages/supermarketPages/ProductStatistics";
+import CompraPage from "./pages/userPages/CompraPage";
 import { UserProvider } from "./context/UserContext";
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
           <Route path="/notification-manager" element={<NotificationManager />} /> 
           <Route path="/notification-history" element={<NotificationHistory />} />  
           <Route path="/estadisticas" element={<ProductStatistics />} /> 
+          <Route path="/comprar/:id" element={<CompraPage />} />
         </Routes>
       </UserProvider>
     </Router>

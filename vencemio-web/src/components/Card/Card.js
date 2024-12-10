@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Card.css";
 
 const Card = ({ product, supermarket, address, onClick, onFavorite, initialFavoriteState }) => {
@@ -16,6 +17,9 @@ const Card = ({ product, supermarket, address, onClick, onFavorite, initialFavor
   // Estado local de isFavorite, puede ser inicializado desde una prop `initialFavoriteState`
   const [isFavorite, setIsFavorite] = useState(initialFavoriteState);
 
+  // Usar el hook de navegación de React Router
+  const navigate = useNavigate();
+
   // Cuando el estado de favorito cambia, notificamos al padre
   const handleFavoriteClick = () => {
     const newFavoriteState = !isFavorite; // Alternamos el estado
@@ -25,6 +29,12 @@ const Card = ({ product, supermarket, address, onClick, onFavorite, initialFavor
     if (onFavorite) {
       onFavorite(product, newFavoriteState); // Notify parent
     }
+  };
+
+  // Función para manejar la acción de "Comprar"
+  const handleBuyClick = () => {
+    // Navega a una página de compra con el ID del producto como parámetro
+    navigate(`/comprar/${id}`);
   };
 
   // Redondear los precios a 2 decimales
@@ -58,6 +68,10 @@ const Card = ({ product, supermarket, address, onClick, onFavorite, initialFavor
           onClick={handleFavoriteClick}
         >
           {isFavorite ? "❤️" : "🤍"}
+        </button>
+        {/* Botón de comprar */}
+        <button className="buy-button" onClick={handleBuyClick}>
+          Comprar
         </button>
       </div>
     </div>

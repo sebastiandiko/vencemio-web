@@ -1,0 +1,92 @@
+/* CompraPage.css */
+.compra-page {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .compra-title {
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .product-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .product-image {
+    max-width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .product-details {
+    flex: 1;
+  }
+  
+  .product-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 10px;
+  }
+  
+  .product-price,
+  .product-discount-price {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+  
+  .product-price span {
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .product-discount-price span {
+    color: #e63946;
+    font-weight: bold;
+  }
+  
+  .product-description {
+    margin: 10px 0;
+    color: #555;
+  }
+  
+  .product-stock {
+    color: #007bff;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .buy-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .buy-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .loading,
+  .error,
+  .not-found {
+    text-align: center;
+    font-size: 16px;
+    color: #999;
+    margin-top: 20px;
+  }
+  
