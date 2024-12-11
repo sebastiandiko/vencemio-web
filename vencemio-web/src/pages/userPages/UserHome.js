@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Card from "../../components/Card/Card";
+import RecentPurchases from "../../components/RecentPurchases";
+
 import { useUser } from "../../context/UserContext";
 import "./UserHome.css";
 
@@ -291,7 +293,6 @@ export default function UserHome() {
               Ver mapa
             </button>
           </div>
-
           <div className="favorites-section">
             <h2>Mis Favoritos</h2>
             <div className="product-list">
@@ -311,7 +312,11 @@ export default function UserHome() {
               )}
             </div>
           </div>
-
+          <div className="daigual">
+            {/* Otras secciones */}
+            <RecentPurchases />
+            {/* Más contenido */}
+          </div>
           {/* Sección de productos según preferencias */}
           <div className="preferred-products">
             <h2>Productos según tus preferencias</h2>
