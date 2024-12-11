@@ -17,6 +17,7 @@ import NotificationManager from "./pages/supermarketPages/NotificationManager";
 import NotificationHistory from "./pages/supermarketPages/NotificationHistory";
 import ProductStatistics from "./pages/supermarketPages/ProductStatistics";
 import CompraPage from "./pages/userPages/CompraPage";
+import PurchaseHistoryPage from "./pages/userPages/PurchaseHistoryPage";
 import { UserProvider } from "./context/UserContext";
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
           <Route path="/notification-history" element={<NotificationHistory />} />  
           <Route path="/estadisticas" element={<ProductStatistics />} /> 
           <Route path="/comprar/:id" element={<CompraPage />} />
+          <Route path="/historial-compras" element={<PurchaseHistoryPage />} />
         </Routes>
       </UserProvider>
     </Router>
