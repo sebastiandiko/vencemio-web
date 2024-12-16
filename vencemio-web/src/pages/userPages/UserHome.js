@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Card from "../../components/Card/Card";
 import RecentPurchases from "../../components/RecentPurchases";
+import UserPreferences from "./UserPreferences";
 
 import { useUser } from "../../context/UserContext";
 import "./UserHome.css";
@@ -23,6 +24,7 @@ export default function UserHome() {
   const [productsBySupermarket, setProductsBySupermarket] = useState({});
   const [userPreferences, setUserPreferences] = useState([]); // Preferencias del usuario
   const navigate = useNavigate();
+  const [showPreferences, setShowPreferences] = useState(false);
 
   const userUid = user?.uid; // Obtener el `uid` desde el contexto de usuario
 
@@ -138,7 +140,7 @@ export default function UserHome() {
 
   const fetchProducts = useCallback(async () => {
     if (!currentLocation) return;
-
+  
     try {
       let url = "http://localhost:5000/api/productos";
       if (selectedSuper && selectedCategory) {
@@ -148,10 +150,17 @@ export default function UserHome() {
       } else if (selectedCategory) {
         url = `http://localhost:5000/api/productos/byCategory/${selectedCategory}`;
       }
-
+  
       const response = await axios.get(url);
       let fetchedProducts = response.data;
-
+  
+      // Filtrar productos no vencidos
+      const today = new Date();
+      fetchedProducts = fetchedProducts.filter((product) => {
+        const expirationDate = new Date(product.fecha_vencimiento);
+        return expirationDate >= today; // Solo productos con fecha >= hoy
+      });
+  
       // Ordenar los productos por proximidad
       fetchedProducts.sort((a, b) => {
         const superA = supermarkets[a.cod_super];
@@ -170,14 +179,14 @@ export default function UserHome() {
         );
         return distanceA - distanceB;
       });
-
+  
       // Filtrar por nombre si hay algo escrito en searchName
       if (searchName) {
         fetchedProducts = fetchedProducts.filter((product) =>
           product.nombre.toLowerCase().includes(searchName.toLowerCase())
         );
       }
-
+  
       // Agrupar los productos por supermercado
       const sortedBySupermarket = fetchedProducts.reduce((acc, product) => {
         const supermarket = supermarkets[product.cod_super]?.cadena || "Desconocido";
@@ -185,7 +194,7 @@ export default function UserHome() {
         acc[supermarket].push(product);
         return acc;
       }, {});
-
+  
       // Setear los productos
       setProducts(fetchedProducts);
       setNearbyProducts(fetchedProducts); // Productos más cercanos
@@ -194,6 +203,7 @@ export default function UserHome() {
       console.error("Error fetching products:", error);
     }
   }, [selectedSuper, selectedCategory, searchName, currentLocation, supermarkets, userPreferences]);
+  
 
   useEffect(() => {
     if (!isLoadingLocation && currentLocation) {
@@ -210,11 +220,21 @@ export default function UserHome() {
     try {
       const response = await axios.get(`http://localhost:5000/api/favorites/${userUid}`);
       console.log("Favoritos recibidos:", response.data); // Ver los favoritos que recibimos
-      setFavorites(response.data);  // Actualiza el estado de favoritos
+      
+      const today = new Date(); // Fecha actual
+  
+      // Filtrar productos no vencidos
+      const validFavorites = response.data.filter((product) => {
+        const expirationDate = new Date(product.fecha_vencimiento);
+        return expirationDate >= today; // Solo productos con fecha >= hoy
+      });
+  
+      setFavorites(validFavorites); // Actualiza el estado de favoritos
     } catch (error) {
       console.error("Error al obtener los favoritos:", error);
     }
   };
+  
 
   useEffect(() => {
     if (userUid) {
@@ -313,6 +333,23 @@ export default function UserHome() {
                 onChange={(e) => setSearchName(e.target.value)}
               />
             </div>
+            <div>
+              <button onClick={() => setShowPreferences(true)} className="btn-edit-preferences">
+                Editar Preferencias
+              </button>
+
+              {showPreferences && user?.uid && (
+                <UserPreferences
+                  userId={user.uid} // Pasar el UID del usuario
+                  onClose={() => setShowPreferences(false)} // Cerrar la página
+                />
+              )}
+
+              {showPreferences && !user?.uid && (
+                <div>Cargando preferencias...</div>
+              )}
+            </div>
+
             <button onClick={handleGoToMap} className="mapa-button">
               Ver mapa
             </button>
