@@ -17,7 +17,7 @@ const UserPreferences = ({ onClose }) => {
         // Fetch de categorías
         const categoriesResponse = await axios.get("http://localhost:5000/api/tipos_product");
         const fetchedCategories = categoriesResponse.data.map((cat) => ({
-          name: cat.nombre.trim().toLowerCase(), // Normalizar nombre
+          name: cat.nombre.trim(), // Mantén el nombre original
           id: cat.id,
         }));
         setCategories(fetchedCategories);
@@ -33,9 +33,9 @@ const UserPreferences = ({ onClose }) => {
 
         // Comparar y setear categorías seleccionadas
         const matchedPreferences = userPrefs
-          .map((pref) => pref.trim().toLowerCase()) // Normaliza las preferencias guardadas
+          .map((pref) => pref.trim()) // Solo aplica trim si es necesario
           .filter((pref) => fetchedCategories.some((cat) => cat.name === pref));
-
+      
         setSelectedCategories(matchedPreferences);
       } catch (error) {
         console.error("Error al obtener categorías o preferencias:", error);
