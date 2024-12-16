@@ -21,6 +21,15 @@ function Header() {
     }
   };
 
+  const scrollToSection = (id) => {
+    localStorage.setItem("sectionToScroll", id); // Guarda el ID de la sección
+    navigate("/"); // Si estás en otra página, vuelve a la principal
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   // Función para manejar el inicio de sesión
   const handleLogin = () => {
     if (userType === "empresa") {
@@ -68,11 +77,11 @@ function Header() {
         <span className="logo-text">VENCEMIO</span>
       </div>
       <nav className="header__nav">
-        <a href="#como-funciona">¿Cómo funciona?</a>
-        <a href="#beneficios">Beneficios</a>
-        <a href="#partners">Partners</a>
-        <a href="#faq">Preguntas Frecuentes</a>
-        <a href="#sobre-nosotros">Nosotros</a>
+        <button onClick={() => scrollToSection("como-funciona")}>¿Cómo funciona?</button>
+        <button onClick={() => scrollToSection("beneficios")}>Beneficios</button>
+        <button onClick={() => scrollToSection("partners")}>Partners</button>
+        <button onClick={() => scrollToSection("faq")}>Preguntas Frecuentes</button>
+        <button onClick={() => scrollToSection("sobre-nosotros")}>Nosotros</button>
       </nav>
       <div className="header__toggle">
         <button
