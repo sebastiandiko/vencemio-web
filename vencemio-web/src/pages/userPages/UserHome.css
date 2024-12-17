@@ -273,3 +273,22 @@ h1 {
 .btn-edit-preferences:active {
   transform: translateY(2px); /* Efecto de presión */
 }
+
+.btn-history{
+  padding: 10px 20px;
+  background-color: #1c802d; /* Color de fondo */
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+.btn-historys:hover {
+  background-color: #68a837; /* Un verde más oscuro para hover */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+}
+
+.btn-history:active {
+  transform: translateY(2px); /* Efecto de presión */
+}

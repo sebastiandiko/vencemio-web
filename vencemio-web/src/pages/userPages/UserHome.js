@@ -27,6 +27,10 @@ export default function UserHome() {
   const [showPreferences, setShowPreferences] = useState(false);
 
   const userUid = user?.uid; // Obtener el `uid` desde el contexto de usuario
+  // Navegación al historial de compras
+  const handleGoToHistory = () => {
+    navigate("/historial-compras"); // Asegúrate que esta ruta exista en tu Router
+  };
 
   // Función para cargar los scripts de Botpress
   useEffect(() => {
@@ -334,6 +338,10 @@ export default function UserHome() {
               />
             </div>
             <div>
+              {/* Nuevo botón para el historial de compras */}
+              <button onClick={handleGoToHistory} className="btn-history">
+                Historial de Compras
+              </button>
               <button onClick={() => setShowPreferences(true)} className="btn-edit-preferences">
                 Editar Preferencias
               </button>
@@ -372,11 +380,6 @@ export default function UserHome() {
                 <p>No tienes productos en tus favoritos.</p>
               )}
             </div>
-          </div>
-          <div className="daigual">
-            {/* Otras secciones */}
-            <RecentPurchases />
-            {/* Más contenido */}
           </div>
           {/* Sección de productos según preferencias */}
           <div className="preferred-products">

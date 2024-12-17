@@ -46,16 +46,16 @@ const RecentPurchases = () => {
   return (
     <div className="recent-purchases">
       <h2>Tus Compras Recientes</h2>
-      <ul>
+      <div className="purchase-list">
         {recentPurchases.map((purchase) => (
-          <li key={purchase.id} className="purchase-item">
-            <p>Producto: {purchase.producto_id}</p>
-            <p>Cantidad: {purchase.cantidad}</p>
-            <p>Total: ${purchase.total.toFixed(2)}</p>
-            <p>Fecha: {new Date(purchase.fecha).toLocaleDateString()}</p>
-          </li>
+          <div key={purchase.id} className="purchase-item">
+            <p><strong>Producto:</strong> {purchase.producto_id}</p>
+            <p><strong>Cantidad:</strong> {purchase.cantidad}</p>
+            <p className="total"><strong>Total:</strong> ${purchase.total.toFixed(2)}</p>
+            <p><strong>Fecha:</strong> {new Date(purchase.fecha).toLocaleDateString()}</p>
+          </div>
         ))}
-      </ul>
+      </div>
       <Link to="/historial-compras" className="view-all">
         Ver todo el historial
       </Link>

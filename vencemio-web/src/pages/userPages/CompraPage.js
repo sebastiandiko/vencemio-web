@@ -66,7 +66,7 @@ const CompraPage = () => {
   };
 
   const handleBuy = async () => {
-    if (!product || !userUid || cantidad <= 0 || cantidad > product.stock) {
+    if (!product || cantidad <= 0 || cantidad > product.stock) {
       alert("Por favor selecciona una cantidad válida.");
       return;
     }
@@ -80,84 +80,97 @@ const CompraPage = () => {
         forma_pago: "Efectivo",
       };
   
-      console.log("Datos enviados al backend:", orderData);
-  
       const response = await fetch("http://localhost:5000/api/ventas", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderData),
       });
   
-      if (!response.ok) {
-        throw new Error("Error al procesar la orden de compra");
-      }
+      if (!response.ok) throw new Error("Error al procesar la compra.");
   
       const data = await response.json();
+      const orderNumber = data.numero_orden;
   
-      const total = product.precio_descuento * cantidad;
-      const orderNumber = generateOrderNumber(userUid, id);
+      // Calcular total
+      const total = parseFloat(product.precio_descuento) * cantidad;
   
-      // Construir el nombre completo del comprador
-      const buyerName = userData
-        ? `${userData.nombre || "N/A"} ${userData.apellido || ""}`
-        : "Usuario no registrado";
+      // Actualizar el stock localmente
+      setProduct((prev) => ({ ...prev, stock: prev.stock - cantidad }));
   
-      alert("¡Orden de compra creada exitosamente!");
-      console.log("Orden de compra:", data);
+      alert(`¡Compra exitosa! Número de orden: ${orderNumber}`);
   
-      // Generar el PDF después de una compra exitosa
-      generatePDF(orderData, total, orderNumber, buyerName, superuserDetails);
+      // Generar PDF
+      generatePDF(orderData, total, orderNumber, userData?.nombre, superuserDetails);
     } catch (err) {
       console.error(err.message);
-      alert("Hubo un error al procesar la compra. Inténtalo de nuevo.");
+      alert("Hubo un error al procesar la compra.");
     } finally {
       setIsProcessing(false);
     }
   };
   
-
-  const generateOrderNumber = (userUid, productId) => {
-    const timestamp = new Date().getTime();
-    return `ORD-${productId}-${userUid}-${timestamp}`;
+  
+  const fetchUpdatedProduct = async () => {
+    try {
+      const productResponse = await fetch(`http://localhost:5000/api/productos/${id}`);
+      if (!productResponse.ok) {
+        throw new Error("Error al obtener el producto actualizado");
+      }
+      const updatedProduct = await productResponse.json();
+      setProduct(updatedProduct); // Actualiza el estado del producto
+    } catch (err) {
+      console.error("Error al actualizar los datos del producto:", err);
+    }
   };
+
 
   const generatePDF = (orderData, total, orderNumber, buyerName = "N/A", superuser = {}) => {
     const doc = new jsPDF();
   
-    // Encabezado
-    doc.setFontSize(18);
-    doc.text("Orden de Compra", 10, 10);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.text("Orden de Compra", 105, 20, { align: "center" });
+  
     doc.setFontSize(12);
-    doc.text(`Tienda: ${superuser.cadena || "N/A"}`, 10, 20);
-    doc.text(`Dirección: ${superuser.direccion || "N/A"}`, 10, 30);
-    doc.text(`Teléfono: ${superuser.telefono || "N/A"}`, 10, 40);
-    doc.text(`Número de Orden: ${orderNumber}`, 10, 50);
-    doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 10, 60);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Tienda: ${superuser.cadena || "N/A"}`, 20, 35);
+    doc.text(`Dirección: ${superuser.direccion || "N/A"}`, 20, 42);
+    doc.text(`Teléfono: ${superuser.telefono || "N/A"}`, 20, 49);
+    doc.text(`Número de Orden: ${orderNumber}`, 20, 56);
+    doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 63);
   
-    // Datos del comprador
-    doc.text("Datos del Comprador:", 10, 80);
-    doc.text(`Nombre: ${buyerName}`, 10, 90); // Se pasa el nombre completo del comprador
-    doc.text(`Usuario ID: ${orderData.user_id || "N/A"}`, 10, 100);
+    doc.line(20, 68, 190, 68);
   
-    // Detalles de la compra
-    doc.text("Detalles de la Compra:", 10, 120);
-    doc.text(`Producto: ${product.nombre || "N/A"}`, 10, 130);
-    doc.text(`Cantidad: ${orderData.cantidad}`, 10, 140);
-    doc.text(`Precio unitario: $${product.precio_descuento.toFixed(2) || "0.00"}`, 10, 150);
-    doc.text(`Total: $${total.toFixed(2)}`, 10, 160);
+    doc.setFont("helvetica", "bold");
+    doc.text("Datos del Comprador:", 20, 77);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Nombre: ${buyerName}`, 20, 85);
   
-    // Forma de pago
-    doc.text("Forma de Pago:", 10, 180);
-    doc.text(`Método: ${orderData.forma_pago || "N/A"}`, 10, 190);
+    doc.line(20, 90, 190, 90);
   
-    // Notas adicionales
-    doc.text("Gracias por su compra. Guarde esta orden como comprobante.", 10, 210);
+    doc.setFont("helvetica", "bold");
+    doc.text("Detalles de la Compra:", 20, 99);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Producto: ${product.nombre || "N/A"}`, 20, 107);
+    doc.text(`Cantidad: ${orderData.cantidad}`, 20, 114);
+    doc.text(`Precio unitario: $${parseFloat(product.precio_descuento).toFixed(2)}`, 20, 121);
+    doc.text(`Total: $${total.toFixed(2)}`, 20, 128);
   
-    // Guardar el archivo
+    doc.line(20, 133, 190, 133);
+  
+    doc.setFont("helvetica", "bold");
+    doc.text("Forma de Pago:", 20, 142);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Método: ${orderData.forma_pago || "N/A"}`, 20, 150);
+  
+    doc.setFont("helvetica", "italic");
+    doc.setTextColor(100);
+    doc.text("Gracias por su compra. Guarde esta orden como comprobante.", 20, 170);
+  
     doc.save(`orden_compra_${orderNumber}.pdf`);
-  };  
+  };
+  
+  
 
   if (loading) {
     return <p className="loading">Cargando detalles del producto...</p>;
@@ -185,6 +198,15 @@ const CompraPage = () => {
             <p className="product-discount-price">
               Precio con descuento: <span>${product.precio_descuento.toFixed(2)}</span>
             </p>
+
+            {/* Información del supermercado */}
+            {superuserDetails && (
+              <div className="superuser-details">
+                <p><strong>Supermercado:</strong> {superuserDetails.cadena}</p>
+                <p><strong>Dirección:</strong> {superuserDetails.direccion}</p>
+              </div>
+            )}
+
             <div className="product-quantity">
               <label htmlFor="cantidad">Cantidad:</label>
               <input
