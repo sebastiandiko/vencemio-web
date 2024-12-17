@@ -14,7 +14,11 @@
     background-size: 40%; /* Ajusta la imagen */
     background-position: center;
   }
-  
+  .product-edit-main-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
   .product-edit-form-title {
     font-size: 28px;
     color: #1c802d;

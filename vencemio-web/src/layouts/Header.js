@@ -3,9 +3,11 @@ import "./Header.css";
 import logo from "../assets/LogoVencemio.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import { useAuth } from "../context/AuthContext";
 
 function Header() {
   const { user, logoutUser } = useUser(); // Accede al usuario autenticado
+  const { superuser, logoutSuper } = useAuth(); // Accede al superusuario autenticado
   const [userType, setUserType] = useState("comprador");
   const navigate = useNavigate();
   const location = useLocation(); // Para obtener la ruta actual
@@ -36,8 +38,13 @@ function Header() {
   };
 
   const handleLogout = () => {
-    logoutUser();
-    navigate("/");
+    if (superuser) {
+      logoutSuper(); // Cierra sesión para el superusuario
+      navigate("/principal-comercio");
+    } else if (user) {
+      logoutUser(); // Cierra sesión para el usuario común
+      navigate("/");
+    }
   };
 
   return (
@@ -68,10 +75,32 @@ function Header() {
         </button>
       </div>
       <div className="header__actions">
-        {user ? (
+        {superuser ? (
           <>
             <div className="header__user-info">
-              <span className="header__user-name">Hola, {user.nombre || "Usuario"}</span>
+              <span className="header__user-name">
+                Bienvenido, {superuser.cadena || "Supermercado"}
+              </span>
+              <button className="btn-logout" onClick={handleLogout}>
+                Cerrar Sesión
+              </button>
+            </div>
+            {/* Botón para regresar al Dashboard si no estamos en /super-dashboard */}
+            {location.pathname !== "/super-dashboard" && (
+              <button
+                className="btn-back-dashboard"
+                onClick={() => navigate("/super-dashboard")}
+              >
+                Volver al Dashboard
+              </button>
+            )}
+          </>
+        ) : user ? (
+          <>
+            <div className="header__user-info">
+              <span className="header__user-name">
+                Hola, {user.nombre || "Usuario"}
+              </span>
               <button className="btn-logout" onClick={handleLogout}>
                 Cerrar Sesión
               </button>

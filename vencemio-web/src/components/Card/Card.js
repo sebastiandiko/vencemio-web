@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Card.css";
 
-const Card = ({ product, supermarket, address, onClick, onFavorite, initialFavoriteState }) => {
+const Card = ({
+  product,
+  supermarket,
+  address,
+  onClick,
+  onFavorite,
+  initialFavoriteState,
+}) => {
   const {
     nombre,
     precio,
@@ -14,54 +21,90 @@ const Card = ({ product, supermarket, address, onClick, onFavorite, initialFavor
     id,
   } = product;
 
-  // Estado local de isFavorite, puede ser inicializado desde una prop `initialFavoriteState`
+  // Estado local para favorito
   const [isFavorite, setIsFavorite] = useState(initialFavoriteState);
-
-  // Usar el hook de navegación de React Router
   const navigate = useNavigate();
-
-  // Cuando el estado de favorito cambia, notificamos al padre
-  const handleFavoriteClick = () => {
-    const newFavoriteState = !isFavorite; // Alternamos el estado
-    setIsFavorite(newFavoriteState); // Actualizamos el estado local
-
-    // Enviamos el nuevo estado al componente padre
-    if (onFavorite) {
-      onFavorite(product, newFavoriteState); // Notify parent
-    }
-  };
 
   // Función para manejar la acción de "Comprar"
   const handleBuyClick = () => {
-    // Navega a una página de compra con el ID del producto como parámetro
     navigate(`/comprar/${id}`);
   };
 
-  // Redondear los precios a 2 decimales
+  // Función para manejar el favorito
+  const handleFavoriteClick = () => {
+    const newFavoriteState = !isFavorite;
+    setIsFavorite(newFavoriteState);
+    if (onFavorite) onFavorite(product, newFavoriteState);
+  };
+
+  // Función para calcular días restantes ajustados a UTC
+  const calculateRemainingDays = (fecha_vencimiento) => {
+    const [year, month, day] = fecha_vencimiento.split("-");
+    const expirationUTC = Date.UTC(year, month - 1, day);
+    const today = new Date();
+    const todayUTC = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+
+    const diffTime = expirationUTC - todayUTC;
+    return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  };
+
+  const remainingDays = calculateRemainingDays(fecha_vencimiento);
+
+  // Función para formatear la fecha a DD/MM/YYYY
+  const formatDateToUTC = (fecha_vencimiento) => {
+    const [year, month, day] = fecha_vencimiento.split("-");
+    return `${day}/${month}/${year}`;
+  };
+
+  // Redondear precios a 2 decimales
   const formattedPrecio = precio ? parseFloat(precio).toFixed(2) : "0.00";
-  const formattedPrecioDescuento = precio_descuento ? parseFloat(precio_descuento).toFixed(2) : "0.00";
+  const formattedPrecioDescuento = precio_descuento
+    ? parseFloat(precio_descuento).toFixed(2)
+    : "0.00";
 
   // Formateo del stock
   const formattedStock = stock ? `Stock: ${stock}` : "Sin stock disponible";
 
   return (
     <div className="card">
-      <div className="card-discount-badge">{Math.round(porcentaje_descuento)}% OFF</div>
-      <img src={imagen || "/default-image.jpg"} alt={nombre} className="card-image" />
+      {/* Badge de descuento */}
+      <div className="card-discount-badge">
+        {Math.round(porcentaje_descuento)}% OFF
+      </div>
+
+      {/* Imagen */}
+      <img
+        src={imagen || "/default-image.jpg"}
+        alt={nombre}
+        className="card-image"
+      />
+
+      {/* Título */}
       <h3 className="card-title">{nombre}</h3>
+
+      {/* Ubicación */}
       <p className="card-address">
         📍 {supermarket} - {address}
       </p>
+
+      {/* Precios */}
       <div className="card-prices">
         <p className="card-original-price">${formattedPrecio}</p>
         <p className="card-discounted-price">${formattedPrecioDescuento}</p>
       </div>
-      <p className="card-expiration">
-        vto - {new Date(fecha_vencimiento).toLocaleDateString()}
+
+      {/* Fecha de vencimiento */}
+      <p
+        className="card-expiration"
+        title={`Fecha de vencimiento: ${formatDateToUTC(fecha_vencimiento)}`}
+      >
+        vto - {formatDateToUTC(fecha_vencimiento)} ({remainingDays} días restantes)
       </p>
-      {/* Muestra el stock disponible */}
+
+      {/* Stock */}
       <p className="card-stock">{formattedStock}</p>
 
+      {/* Acciones */}
       <div className="card-actions">
         <button
           className={`favorite-button ${isFavorite ? "favorited" : ""}`}
@@ -69,7 +112,6 @@ const Card = ({ product, supermarket, address, onClick, onFavorite, initialFavor
         >
           {isFavorite ? "❤️" : "🤍"}
         </button>
-        {/* Botón de comprar */}
         <button className="buy-button" onClick={handleBuyClick}>
           Comprar
         </button>

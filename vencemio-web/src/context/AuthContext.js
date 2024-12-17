@@ -1,5 +1,5 @@
-// src/context/AuthContext.js
 import { createContext, useState, useEffect, useContext } from "react";
+import axios from "axios";
 
 export const AuthContext = createContext();
 
@@ -16,10 +16,18 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("super_token");
   };
 
+  // Cargar datos del superuser si el token existe
   useEffect(() => {
     const storedToken = localStorage.getItem("super_token");
     if (storedToken) {
-      // Aquí podrías hacer una llamada para verificar el token y obtener los datos del supermercado
+      axios
+        .get("http://localhost:5000/api/auth/me-super", {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        })
+        .then((response) => setSuperuser(response.data))
+        .catch(() => {
+          localStorage.removeItem("super_token");
+        });
     }
   }, []);
 
