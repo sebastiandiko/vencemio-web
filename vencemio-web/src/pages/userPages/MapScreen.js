@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
+import { GoogleMap, LoadScriptNext, Marker, InfoWindow } from "@react-google-maps/api";
 import { useNavigate } from "react-router-dom"; // Importa useNavigate para redirigir
 import axios from "axios";
 
@@ -109,7 +109,7 @@ const MapScreen = () => {
       </button>
 
       {/* Mapa */}
-      <LoadScript
+      <LoadScriptNext
         googleMapsApiKey={process.env.REACT_APP_GOOGLE_API_KEY}
         onLoad={() => setMapLoaded(true)}
       >
@@ -207,6 +207,7 @@ const MapScreen = () => {
                 <InfoWindow
                   position={{ lat: selected.lat, lng: selected.lng }}
                   onCloseClick={() => setSelected(null)}
+                  options={{ disableAutoPan: true, closeBoxURL: '' }} // Deshabilita el botón predeterminado
                 >
                   <div
                     style={{
@@ -247,7 +248,7 @@ const MapScreen = () => {
             </>
           )}
         </GoogleMap>
-      </LoadScript>
+      </LoadScriptNext>
     </div>
   );
 };
