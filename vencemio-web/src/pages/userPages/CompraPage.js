@@ -4,6 +4,7 @@ import { useUser } from "../../context/UserContext";
 import { jsPDF } from "jspdf";
 import "./CompraPage.css";
 
+
 const CompraPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
