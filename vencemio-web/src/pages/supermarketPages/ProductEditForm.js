@@ -88,11 +88,38 @@ export default function ProductEditForm() {
     fetchTipoStats();
   }, [product.cod_tipo, superuser]);
 
+
+  // Actualización dinámica de precios y descuentos
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
-  };
+    let updatedProduct = { ...product, [name]: value };
 
+    if (name === "precio") {
+      const newPrice = parseFloat(value) || 0;
+      updatedProduct.precio_descuento = (
+        newPrice -
+        (newPrice * (product.porcentaje_descuento || 0)) / 100
+      ).toFixed(2);
+    }
+
+    if (name === "precio_descuento") {
+      const newDiscountPrice = parseFloat(value) || 0;
+      updatedProduct.porcentaje_descuento = (
+        ((product.precio - newDiscountPrice) / product.precio) *
+        100
+      ).toFixed(2);
+    }
+
+    if (name === "porcentaje_descuento") {
+      const newPercentage = parseFloat(value) || 0;
+      updatedProduct.precio_descuento = (
+        product.precio -
+        (product.precio * newPercentage) / 100
+      ).toFixed(2);
+    }
+
+    setProduct(updatedProduct);
+  };
   const handleFechaAvisoChange = (e) => {
     setFechaAviso(e.target.value);
   };
