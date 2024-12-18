@@ -26,10 +26,10 @@ const PurchaseHistoryPage = () => {
   
       try {
         const [historyRes, productsRes, supermarketsRes, userRes] = await Promise.all([
-          fetch(`http://localhost:5000/api/ventas/history/${userUid}`),
-          fetch("http://localhost:5000/api/productos"),
-          fetch("http://localhost:5000/api/superusers"),
-          fetch(`http://localhost:5000/api/users/uid/${userUid}`), // Nueva llamada para el nombre del usuario
+          fetch(`${process.env.REACT_APP_API_URL}/api/ventas/history/${userUid}`),
+          fetch(`${process.env.REACT_APP_API_URL}/api/productos`),
+          fetch(`${process.env.REACT_APP_API_URL}/api/superusers`),
+          fetch(`${process.env.REACT_APP_API_URL}/api/users/uid/${userUid}`), // Nueva llamada para el nombre del usuario
         ]);
   
         if (!historyRes.ok || !productsRes.ok || !supermarketsRes.ok || !userRes.ok) {

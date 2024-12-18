@@ -36,7 +36,7 @@ const NotificationManager = () => {
       if (superuser) {
         try {
           const response = await axios.get(
-            `http://localhost:5000/api/productos/byCodSuper/${superuser.cod_super}`
+            `${process.env.REACT_APP_API_URL}/api/productos/byCodSuper/${superuser.cod_super}`
           );
           setProductos(response.data);
         } catch (error) {
@@ -81,7 +81,7 @@ const NotificationManager = () => {
       cod_super: superuser.cod_super,
     };
     try {
-      await axios.post('http://localhost:5000/api/notificaciones/add', nuevaNotificacion);
+      await axios.post('${process.env.REACT_APP_API_URL}/api/notificaciones/add', nuevaNotificacion);
       console.log('Notificación creada:', nuevaNotificacion);
     } catch (error) {
       console.error('Error al crear la notificación:', error);

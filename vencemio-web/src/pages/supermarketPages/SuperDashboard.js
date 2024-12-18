@@ -26,7 +26,7 @@ export default function SuperDashboard() {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/productos/byCodSuper/${superuser.cod_super}`
+        `${process.env.REACT_APP_API_URL}/api/productos/byCodSuper/${superuser.cod_super}`
       );
       setProducts(response.data);
       setFilteredProducts(response.data);
@@ -41,7 +41,7 @@ export default function SuperDashboard() {
   // Fetch de categorías
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/tipos_product");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/tipos_product`);
       setCategories(response.data.map((category) => category.nombre)); // Usamos "nombre" en lugar de "codigo"
     } catch (error) {
       console.error("Error al obtener categorías:", error);
@@ -75,7 +75,7 @@ export default function SuperDashboard() {
   const handleDeleteProduct = async (productId) => {
     try {
       // Realizar la solicitud DELETE al backend
-      const response = await axios.delete(`http://localhost:5000/api/productos/${productId}`);
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/productos/${productId}`);
 
       // Filtrar el producto eliminado de las listas locales
       setProducts((prevProducts) =>

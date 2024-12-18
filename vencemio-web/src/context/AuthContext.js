@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
     const storedToken = localStorage.getItem("super_token");
     if (storedToken) {
       axios
-        .get("http://localhost:5000/api/auth/me-super", {
+        .get(`${process.env.REACT_APP_API_URL}/api/auth/me-super`, {
           headers: { Authorization: `Bearer ${storedToken}` },
         })
         .then((response) => setSuperuser(response.data))

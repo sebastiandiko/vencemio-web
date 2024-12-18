@@ -22,7 +22,7 @@ const CompraPage = () => {
     const fetchProductAndUser = async () => {
       try {
         // Obtener datos del producto
-        const productResponse = await fetch(`http://localhost:5000/api/productos/${id}`);
+        const productResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/productos/${id}`);
         if (!productResponse.ok) {
           throw new Error('Error al obtener el producto');
         }
@@ -31,7 +31,7 @@ const CompraPage = () => {
   
         // Obtener detalles del supermercado
         const superuserResponse = await fetch(
-          `http://localhost:5000/api/superusers/cod_super/${productData.cod_super}`
+          `${process.env.REACT_APP_API_URL}/api/superusers/cod_super/${productData.cod_super}`
         );
         if (superuserResponse.ok) {
           const superuserData = await superuserResponse.json();
@@ -40,7 +40,7 @@ const CompraPage = () => {
   
         // Obtener datos del usuario
         if (userUid) {
-          const userResponse = await fetch(`http://localhost:5000/api/users/uid/${userUid}`);
+          const userResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/users/uid/${userUid}`);
           if (userResponse.ok) {
             const userData = await userResponse.json();
             setUserData(userData); // Guardar datos del usuario en el estado
@@ -81,7 +81,7 @@ const CompraPage = () => {
         forma_pago: "Efectivo",
       };
   
-      const response = await fetch("http://localhost:5000/api/ventas", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/ventas`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderData),
@@ -113,7 +113,7 @@ const CompraPage = () => {
   
   const fetchUpdatedProduct = async () => {
     try {
-      const productResponse = await fetch(`http://localhost:5000/api/productos/${id}`);
+      const productResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/productos/${id}`);
       if (!productResponse.ok) {
         throw new Error("Error al obtener el producto actualizado");
       }

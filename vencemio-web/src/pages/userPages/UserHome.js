@@ -106,7 +106,7 @@ export default function UserHome() {
   useEffect(() => {
     const fetchFilters = async () => {
       try {
-        const superResponse = await axios.get("http://localhost:5000/api/superusers");
+        const superResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/superusers`);
         const superData = superResponse.data.reduce((acc, supermarket) => {
           acc[supermarket.cod_super] = {
             cadena: supermarket.cadena,
@@ -118,7 +118,7 @@ export default function UserHome() {
         }, {});
         setSupermarkets(superData);
 
-        const categoryResponse = await axios.get("http://localhost:5000/api/tipos_product");
+        const categoryResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/tipos_product`);
         const categoryData = categoryResponse.data.map((category) => category.nombre);
         setCategories(categoryData);
 
@@ -127,7 +127,7 @@ export default function UserHome() {
 
         // Obtener las preferencias del usuario solo si userUid está presente
         if (userUid) {
-          const prefResponse = await axios.get(`http://localhost:5000/api/users/preferences/${userUid}`);
+          const prefResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/preferences/${userUid}`);
           console.log("Preferencias del usuario:", prefResponse.data.preferences);
           setUserPreferences(prefResponse.data.preferences); // Guardar preferencias
         } else {
@@ -146,13 +146,13 @@ export default function UserHome() {
     if (!currentLocation) return;
   
     try {
-      let url = "http://localhost:5000/api/productos";
+      let url = `${process.env.REACT_APP_API_URL}/api/productos`;
       if (selectedSuper && selectedCategory) {
-        url = `http://localhost:5000/api/productos/filter/${selectedSuper}/${selectedCategory}`;
+        url = `${process.env.REACT_APP_API_URL}/api/productos/filter/${selectedSuper}/${selectedCategory}`;
       } else if (selectedSuper) {
-        url = `http://localhost:5000/api/productos/byCodSuper/${selectedSuper}`;
+        url = `${process.env.REACT_APP_API_URL}/api/productos/byCodSuper/${selectedSuper}`;
       } else if (selectedCategory) {
-        url = `http://localhost:5000/api/productos/byCategory/${selectedCategory}`;
+        url = `${process.env.REACT_APP_API_URL}/api/productos/byCategory/${selectedCategory}`;
       }
   
       const response = await axios.get(url);
@@ -222,7 +222,7 @@ export default function UserHome() {
 
   const fetchFavorites = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/favorites/${userUid}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/favorites/${userUid}`);
       console.log("Favoritos recibidos:", response.data); // Ver los favoritos que recibimos
       
       const today = new Date(); // Fecha actual
@@ -260,14 +260,14 @@ export default function UserHome() {
     try {
       if (isFavorite) {
         // Agregar a favoritos
-        await axios.post("http://localhost:5000/api/favorites/add", {
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/favorites/add`, {
           userUid: user.uid,  // Usamos el UID del usuario
           productId: product.id,  // El ID del producto
         });
         setFavorites((prev) => [...prev, product]); // Actualiza el estado local de favoritos
       } else {
         // Eliminar de favoritos
-        await axios.post("http://localhost:5000/api/favorites/remove", {
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/favorites/remove`, {
           userUid: user.uid,
           productId: product.id,
         });

@@ -16,7 +16,7 @@ const NotificationHistory = () => {
       if (superuser) {
         try {
           const response = await axios.get(
-            `http://localhost:5000/api/notificaciones/bySuper/${superuser.cod_super}`
+            `${process.env.REACT_APP_API_URL}/api/notificaciones/bySuper/${superuser.cod_super}`
           );
           setNotifications(response.data);
         } catch (error) {
@@ -30,7 +30,7 @@ const NotificationHistory = () => {
   // Función para eliminar una notificación
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/notificaciones/delete/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/notificaciones/delete/${id}`);
       // Actualizar el estado para reflejar la eliminación en el frontend
       setNotifications((prevNotifications) =>
         prevNotifications.filter((notification) => notification.id !== id)

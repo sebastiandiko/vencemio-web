@@ -3,6 +3,7 @@ import { useUser } from "../context/UserContext";
 import { Link } from "react-router-dom";
 import "./RecentPurchases.css";
 
+
 const RecentPurchases = () => {
   const [recentPurchases, setRecentPurchases] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +14,7 @@ const RecentPurchases = () => {
   useEffect(() => {
     const fetchRecentPurchases = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/ventas/recent/${userUid}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/productos`);
         if (!response.ok) {
           throw new Error("Error al obtener las compras recientes.");
         }

@@ -32,7 +32,7 @@ export default function ProductForm() {
   useEffect(() => {
     const fetchTiposProducto = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/tipos_product");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/tipos_product`);
         setTiposProducto(response.data);
       } catch (error) {
         console.error("Error al obtener tipos de producto:", error);
@@ -48,7 +48,7 @@ export default function ProductForm() {
         try {
           // Llamar a la API para obtener productos filtrados por supermercado y tipo de producto
           const response = await axios.get(
-            `http://localhost:5000/api/productos/filter/${superuser.cod_super}/${idTipo}`
+            `${process.env.REACT_APP_API_URL}/api/productos/filter/${superuser.cod_super}/${idTipo}`
           );
   
           const productos = response.data;
@@ -118,7 +118,7 @@ export default function ProductForm() {
   // Función para verificar si el código de barra ya existe
   const checkCodigoBarraExistente = async (codigo) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/productos/byCodSuper/${superuser.cod_super}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/productos/byCodSuper/${superuser.cod_super}`);
       const productos = response.data;
 
       const codigoDuplicado = productos.some((producto) => producto.codigo_barra === codigo);
@@ -163,7 +163,7 @@ export default function ProductForm() {
     };
 
     try {
-      await axios.post("http://localhost:5000/api/productos/add", productData);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/productos/add`, productData);
       alert("Producto agregado exitosamente.");
       navigate("/super-dashboard");
     } catch (error) {

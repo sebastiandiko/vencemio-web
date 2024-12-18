@@ -25,7 +25,7 @@ export const UserProvider = ({ children }) => {
     const storedToken = localStorage.getItem("user_token");
     if (storedToken) {
       axios
-        .get(`http://localhost:5000/api/users/uid/${storedToken}`)
+        .get(`${process.env.REACT_APP_API_URL}/api/users/uid/${storedToken}`)
         .then((response) => {
           setUser({
             id: response.data.id, // ID del documento Firestore

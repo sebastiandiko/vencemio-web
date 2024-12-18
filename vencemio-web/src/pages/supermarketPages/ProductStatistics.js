@@ -32,7 +32,7 @@ const ProductStatistics = () => {
   useEffect(() => {
     const fetchProductsAndSales = async () => {
       try {
-        const productsResponse = await axios.get("http://localhost:5000/api/productos/");
+        const productsResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/productos/`);
         const fetchedProducts = productsResponse.data;
 
         const filtered = fetchedProducts.filter(
@@ -42,7 +42,7 @@ const ProductStatistics = () => {
         setProducts(fetchedProducts);
         setFilteredProducts(filtered);
 
-        const salesResponse = await axios.get("http://localhost:5000/api/ventas/all");
+        const salesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/ventas/all`);
         const fetchedSales = salesResponse.data;
         setSales(fetchedSales);
 

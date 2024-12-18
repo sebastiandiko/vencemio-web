@@ -21,7 +21,7 @@ export default function ProductEditForm() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/productos/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/productos/${id}`);
         const fetchedProduct = response.data;
 
         if (fetchedProduct.fecha_vencimiento) {
@@ -42,7 +42,7 @@ export default function ProductEditForm() {
 
     const fetchTiposProducto = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/tipos_product");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/tipos_product`);
         setTiposProducto(response.data);
       } catch (error) {
         console.error("Error al obtener tipos de producto:", error);
@@ -58,7 +58,7 @@ export default function ProductEditForm() {
       if (product.cod_tipo && superuser) {
         try {
           const response = await axios.get(
-            `http://localhost:5000/api/productos/filter/${superuser.cod_super}/${product.cod_tipo}`
+            `${process.env.REACT_APP_API_URL}/api/productos/filter/${superuser.cod_super}/${product.cod_tipo}`
           );
 
           const productos = response.data;
@@ -137,7 +137,7 @@ export default function ProductEditForm() {
     };
 
     try {
-      await axios.put(`http://localhost:5000/api/productos/${id}`, updatedProduct);
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/productos/${id}`, updatedProduct);
       alert("Producto actualizado exitosamente.");
       navigate("/super-dashboard");
     } catch (error) {

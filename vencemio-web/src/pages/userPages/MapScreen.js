@@ -41,7 +41,7 @@ const MapScreen = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/superusers");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/superusers`);
         const data = response.data.map((superuser) => ({
           id: superuser.id,
           lat: superuser.ubicacion.latitud,

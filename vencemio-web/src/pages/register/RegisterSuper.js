@@ -40,7 +40,7 @@ function RegisterSuper() {
   
     try {
       // Solicitud al backend
-      const response = await axios.get("http://localhost:5000/api/google/geocode", {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/google/geocode`, {
         params: { address },
       });
   
@@ -85,7 +85,7 @@ function RegisterSuper() {
 
       console.log("Datos enviados:", data);
 
-      const response = await axios.post("http://localhost:5000/api/superusers/register", data);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/superusers/register`, data);
 
       if (response.status === 201) {
         alert(`Supermercado registrado exitosamente con ID: ${response.data.id}`);

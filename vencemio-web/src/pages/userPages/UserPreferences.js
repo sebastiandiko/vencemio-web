@@ -15,7 +15,7 @@ const UserPreferences = ({ onClose }) => {
     const fetchCategoriesAndPreferences = async () => {
       try {
         // Fetch de categorías
-        const categoriesResponse = await axios.get("http://localhost:5000/api/tipos_product");
+        const categoriesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/tipos_product`);
         const fetchedCategories = categoriesResponse.data.map((cat) => ({
           name: cat.nombre.trim(), // Mantén el nombre original
           id: cat.id,
@@ -24,7 +24,7 @@ const UserPreferences = ({ onClose }) => {
 
         // Fetch de preferencias del usuario
         const preferencesResponse = await axios.get(
-          `http://localhost:5000/api/users/preferences/${user.uid}`
+          `${process.env.REACT_APP_API_URL}/api/users/preferences/${user.uid}`
         );
         const userPrefs = preferencesResponse.data.preferences || [];
 
@@ -50,7 +50,7 @@ const UserPreferences = ({ onClose }) => {
     try {
       setIsSaving(true);
       await axios.put(
-        `http://localhost:5000/api/users/preferences/uid/${user.uid}`,
+        `${process.env.REACT_APP_API_URL}/api/users/preferences/uid/${user.uid}`,
         { preferences: selectedCategories }
       );
       alert("Preferencias actualizadas con éxito.");
